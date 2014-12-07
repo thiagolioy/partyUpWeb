@@ -1,3 +1,14 @@
-<% places.forEach(function(place) { %>
-            <p><%= place.get('name') %></p>
-         <% }) %>
+<% var stylesheet = "admin" %>
+<% var title = "Admin" %>
+<% include ../_header %>
+
+
+
+<select>
+  <% places.forEach(function(place) { %>
+    <option value="<%= place.get('id') %>"><%= place.get('name') %></option>
+  <% }) %>
+</select>
+
+
+<% include ../_footer %>
