@@ -2,23 +2,8 @@
 <% var title = "Admin" %>
 <% include ../_header %>
 
+<% include ../partyup/_form %>
 
-<form>
-	<div class="row">
-    	<div class="large-4 columns">
-			<select>
-			  <% places.forEach(function(place) { %>
-			    <option value="<%= place.get('id') %>"><%= place.get('name') %></option>
-			  <% }) %>
-			</select>
-		</div>
-	</div>
-	<div class="row">
-    <div class="large-4 columns">
-    	<input type="text" placeholder="Data" />
-    </div>
-
-</form>
 
 
 <% include ../_footer %>
