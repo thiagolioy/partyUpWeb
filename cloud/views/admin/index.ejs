@@ -3,12 +3,22 @@
 <% include ../_header %>
 
 
+<form>
+	<div class="row">
+    	<div class="large-4 columns">
+			<select>
+			  <% places.forEach(function(place) { %>
+			    <option value="<%= place.get('id') %>"><%= place.get('name') %></option>
+			  <% }) %>
+			</select>
+		</div>
+	</div>
+	<div class="row">
+    <div class="large-4 columns">
+    	<input type="text" placeholder="Data" />
+    </div>
 
-<select>
-  <% places.forEach(function(place) { %>
-    <option value="<%= place.get('id') %>"><%= place.get('name') %></option>
-  <% }) %>
-</select>
+</form>
 
 
 <% include ../_footer %>
