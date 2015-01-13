@@ -1,0 +1,51 @@
+<form>
+	<div class="row">
+    	<div class="large-4 medium-6 small-12 columns">
+			<select>
+				<option value="" disabled selected>Lugar</option>
+			  <% places.forEach(function(place) { %>
+			    <option value="<%= place.id %>"><%= place.get('name') %></option>
+			  <% }) %>
+			</select>
+		</div>
+		<div class="large-4 medium-6 small-12 columns end">
+			<select >
+				<option value="" disabled selected>Tipo de Lista</option>
+			  <% places.forEach(function(place) { %>
+			    <option value="<%= place.id %>"><%= place.get('name') %></option>
+			  <% }) %>
+			</select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="large-4 medium-6 small-12 columns">
+	    	<input type="text" placeholder="Data" />
+	    </div>
+	    <div class="large-4 medium-6 small-12 columns end">
+	    	<input type="text" placeholder="Facebook Event ID" />
+	    </div>
+    </div>
+    <div class="row">
+		<div class="large-4 medium-6 small-12 columns">
+	    	<input type="text" placeholder="Nome" />
+	    </div>
+	    <div class="large-4 medium-6 small-12 columns end">
+	    	<input type="text" placeholder="Email" />
+	    </div>
+    </div>
+    <div class="row">
+		<div class="large-4 medium-6 small-12 columns">
+	    	<textarea rows="4" cols="50" placeholder="Descrição"></textarea>
+	    </div>
+	    <div class="large-4 medium-6 small-12 columns end">
+		    <div class="row collapse">
+		        <div class="large-8 medium-8 small-8 columns">
+		          <input type="text" placeholder="Imagem Promocional">
+		        </div>
+		        <div class="large- medium-4 small-4 columns">
+		          <a href="#" class="button postfix default">Upload</a>
+		        </div>
+	        </div>
+        </div>
+    </div>
+</form>
