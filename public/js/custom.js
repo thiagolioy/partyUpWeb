@@ -1,4 +1,4 @@
-var SnapR = SnapR || (function() {
+var PartyUp = PartyUp || (function() {
   var file;
 
   var bindUploadButtonEvent = function () {
@@ -10,11 +10,14 @@ var SnapR = SnapR || (function() {
   var bindSelectFileEvent = function () {
     $('#select-file').bind("change", function(f) {
       var files = f.target.files || f.dataTransfer.files;
-      file = files[0];
-      $("#filename").val(file.name);
+      var contains = (files[0].name.indexOf(".png") > -1 || files[0].name.indexOf(".jpg") > -1 || files[0].name.indexOf(".jpeg") > -1);
+      
+      if(contains){
+        file = files[0];
+        $("#filename").val(file.name);
+      }else{
 
-      var contains = file.name.indexOf(".ipa") > -1;
-      toggleBounceAnimation("#bundle-id-container",contains);
+      }
     });
   };
 
@@ -62,7 +65,7 @@ var SnapR = SnapR || (function() {
       contentType: false,
       success: function(data) {
         toggleBounceAnimation("#progressbar-container",false);
-        postRelease(data.url);
+        postParty(data.url);
       },
       error: function(data) {
         var obj = jQuery.parseJSON(data);
@@ -74,25 +77,35 @@ var SnapR = SnapR || (function() {
 
   var initParseSdk = function(){
     if(!Parse.applicationId)
-      Parse.initialize("jol9azVpjaanp6btbn3fQVAoQVsE4ZFwUE29EkQh",
-      "7KWtVRhabygCguq8JdKmuA2UNvwbRFeJgik642qZ");
+      Parse.initialize("sfI8tzyt1PF8aOpQD1w5b7osmm5D69aFmNxu6IFH",
+      "7WimPraXqkpps6GYK10XChOMm5Y1dwtCJAy0DfnU");
   };
 
-  var postRelease = function(filePath){
+  var postParty = function(filePath){
     initParseSdk();
 
-    var Release = Parse.Object.extend("Release");
-    var newRelease = new Release();
+    var Party = Parse.Object.extend("Party");
+    var newParty = new Party();
 
-    newRelease.set("upload_path", filePath);
-    newRelease.set("bundle_id", "teste.api");
+    newParty.set("canonicalName", $("#name").val());
+    newParty.set("date", $("#date").val());
+    newParty.set("description", $("#description").val());
+    //newParty.set("gentsPrice", );
+    newParty.set("image", filePath);
+    //newParty.set("ladysPrice", "teste.api");
+    newParty.set("name", $("#name").val());
+    newParty.set("place", $("#place").val());
+    newParty.set("sendNamesType", "facebook");
+    newParty.set("createdAt", new Date());
+    //newParty.set("updatedAt", "teste.api");
+    //newParty.set("ACL", filePath);
 
-    newRelease.save(null, {
-      success: function(release) {
-        var releaseUrl = "http://snaprelease.parseapp.com/download/"+release.id;
-        window.location.replace(releaseUrl);
+    newParty.save(null, {
+      success: function(party) {
+        var partyUpUrl = "http://partyup.parseapp.com/";
+        window.location.replace(partyUpUrl);
       },
-      error: function(release, error) {
+      error: function(party, error) {
         // Execute any logic that should take place if the save fails.
         // error is a Parse.Error with an error code and message.
         alert('Failed to create new object, with error code: ' + error.message);
@@ -101,8 +114,8 @@ var SnapR = SnapR || (function() {
 
   };
 
-  var bindSnapReleaseEvent = function(){
-    $('#snaprelease-button').click(function() {
+  var bindSavePartyEvent = function(){
+    $('#save-button').click(function() {
       uploadFile();
     });
   };
@@ -110,7 +123,7 @@ var SnapR = SnapR || (function() {
   var attachEvents = function () {
     bindUploadButtonEvent();
     bindSelectFileEvent();
-    bindSnapReleaseEvent();
+    bindSavePartyEvent();
   };
 
   return {
@@ -119,5 +132,5 @@ var SnapR = SnapR || (function() {
 })();
 
 $(document).ready(function() {
-  SnapR.attachEvents();
+  PartyUp.attachEvents();
 });
