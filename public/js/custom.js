@@ -1,5 +1,6 @@
 var PartyUp = PartyUp || (function() {
   var file;
+  var place;
 
   var bindUploadButtonEvent = function () {
     $('#upload-button').click(function(){
@@ -10,7 +11,8 @@ var PartyUp = PartyUp || (function() {
   var bindSelectFileEvent = function () {
     $('#select-file').bind("change", function(f) {
       var files = f.target.files || f.dataTransfer.files;
-      var contains = (files[0].name.indexOf(".png") > -1 || files[0].name.indexOf(".jpg") > -1 || files[0].name.indexOf(".jpeg") > -1);
+      var name = files[0].name.toLowerCase();
+      var contains = (name.indexOf(".png") > -1 || name.indexOf(".jpg") > -1 || name.indexOf(".jpeg") > -1);
       
       if(contains){
         file = files[0];
@@ -54,8 +56,8 @@ var PartyUp = PartyUp || (function() {
       },
       type: "POST",
       beforeSend: function(request) {
-        request.setRequestHeader("X-Parse-Application-Id", 'jol9azVpjaanp6btbn3fQVAoQVsE4ZFwUE29EkQh');
-        request.setRequestHeader("X-Parse-REST-API-Key", '1l6FZMNAlO2ubHK62Z2p2dbXZso0I7Q4JxreJSBG');
+        request.setRequestHeader("X-Parse-Application-Id", '5sjv0ulSUoP2jMeLfvblBcfWhAkhQ76bDwRVxnh6');
+        request.setRequestHeader("X-Parse-REST-API-Key", '497ZfHyTwSgrhbnaYSCZiOrS8p3k0HpvtIRrKyXM');
         request.setRequestHeader("Content-Type", file.type);
         toggleBounceAnimation("#progressbar-container",true);
       },
@@ -65,7 +67,7 @@ var PartyUp = PartyUp || (function() {
       contentType: false,
       success: function(data) {
         toggleBounceAnimation("#progressbar-container",false);
-        postParty(data.url);
+        postParty(file);
       },
       error: function(data) {
         var obj = jQuery.parseJSON(data);
@@ -77,24 +79,25 @@ var PartyUp = PartyUp || (function() {
 
   var initParseSdk = function(){
     if(!Parse.applicationId)
-      Parse.initialize("sfI8tzyt1PF8aOpQD1w5b7osmm5D69aFmNxu6IFH",
-      "7WimPraXqkpps6GYK10XChOMm5Y1dwtCJAy0DfnU");
+      Parse.initialize("5sjv0ulSUoP2jMeLfvblBcfWhAkhQ76bDwRVxnh6",
+      "tLOzhEPIJpzTvtQ0SszzwLv1lFC8nsucaePUc7YO");
   };
 
-  var postParty = function(filePath){
+  var postParty = function(){
     initParseSdk();
 
     var Party = Parse.Object.extend("Party");
     var newParty = new Party();
+    selectedPlace();
 
     newParty.set("canonicalName", $("#name").val());
-    newParty.set("date", $("#date").val());
+    newParty.set("date", parseDate($("#date").val()));
     newParty.set("description", $("#description").val());
     //newParty.set("gentsPrice", );
-    newParty.set("image", filePath);
+    newParty.set("image", new Parse.File(file.name, file));
     //newParty.set("ladysPrice", "teste.api");
     newParty.set("name", $("#name").val());
-    newParty.set("place", $("#place").val());
+    newParty.set("place", place);
     newParty.set("sendNamesType", "facebook");
     newParty.set("createdAt", new Date());
     //newParty.set("updatedAt", "teste.api");
@@ -114,9 +117,33 @@ var PartyUp = PartyUp || (function() {
 
   };
 
+  var parseDate = function(string){
+    var parts = string.split('/');
+    var date = new Date(parseInt(parts[2], 10),
+                    parseInt(parts[1], 10) - 1,
+                    parseInt(parts[0], 10));
+
+    return date;
+  }
+
+  var selectedPlace = function(){
+    var Place = Parse.Object.extend('Place');
+    var query = new Parse.Query(Place);
+    query.descending('createdAt');
+
+    query.get($("#select-place").val(),{
+      success:function(place) {
+        place = place;
+      },
+      error:function() {
+      res.send(500, 'Failed loading place');
+      }
+    });
+  }
+
   var bindSavePartyEvent = function(){
     $('#save-button').click(function() {
-      uploadFile();
+      postParty();
     });
   };
 
