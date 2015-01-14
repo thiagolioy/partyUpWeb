@@ -1,0 +1,62 @@
+<form>
+	<div class="row">
+    	<div class="large-4 medium-6 small-12 columns">
+			<select id="select-place">
+				<option value="" disabled selected>Lugar</option>
+			  <% places.forEach(function(place) { %>
+			    <option value="<%= place.id %>"><%= place.get('name') %></option>
+			  <% }) %>
+			</select>
+		</div>
+		<div class="large-4 medium-6 small-12 columns end">
+			<select id="select-type-list">
+				<option value="" disabled selected>Tipo de Lista</option>
+			  <% places.forEach(function(place) { %>
+			    <option value="<%= place.id %>"><%= place.get('name') %></option>
+			  <% }) %>
+			</select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="large-4 medium-6 small-12 columns">
+	    	<input id="date" type="text" placeholder="Data" />
+	    </div>
+	    <div class="large-4 medium-6 small-12 columns end">
+	    	<input id="facebook-event-id" type="text" placeholder="Facebook Event ID" />
+	    </div>
+    </div>
+    <div class="row">
+		<div class="large-4 medium-6 small-12 columns">
+	    	<input id="name" type="text" placeholder="Nome" />
+	    </div>
+	    <div class="large-4 medium-6 small-12 columns end">
+	    	<input id="email" type="text" placeholder="Email" />
+	    </div>
+    </div>
+    <div class="row">
+		<div class="large-4 medium-6 small-12 columns">
+	    	<textarea rows="4" cols="50" id="description" placeholder="Descrição"></textarea>
+	    </div>
+	    <div class="large-4 medium-6 small-12 columns end">
+		    <div class="row collapse">
+		        <div class="large-8 medium-8 small-8 columns">
+		          <input type="text" id="filename" readonly placeholder="Imagem Promocional">
+		          <input type="file" id="select-file" class="hide" >
+		        </div>
+		        <div class="large-4 medium-4 small-4 columns">
+		          <a href="#" class="button postfix default" id="upload-button">Upload</a>
+		        </div>
+	        </div>
+	        <div id="progressbar-container" class="row hide">
+	  			<div class="progress">
+	      			<span class="meter" id="progressbar-meter" style="width: 0%"></span>
+	  			</div>
+	  		</div>
+        </div>
+    </div>
+    <div class="row">
+    	<div class="large-4 medium-6 small-12 columns">
+	          <a href="#" class="button postfix default" id="save-button">Salvar</a>
+        </div>
+    </div>
+</form>
