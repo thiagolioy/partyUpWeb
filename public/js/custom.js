@@ -27,7 +27,6 @@ var PartyUp = PartyUp || (function() {
     },
 
     bindChangePartyTypeEvent : function () {
-      alert("bindChangePartyTypeEvent");
       $('#select-party-list-type').bind("change",function(f){
         var option = $('#select-party-list-type').val();
 
@@ -67,11 +66,6 @@ var PartyUp = PartyUp || (function() {
         if(k.indexOf("bind") > -1)
           eventBindings[k]();
       });
-      // eventBindings.bindUploadButtonEvent();
-      // eventBindings.bindSelectFileEvent();
-      // eventBindings.bindSavePartyEvent();
-      // eventBindings.bindChangePartyTypeEvent();
-      // eventBindings.bindRequestFocusOnDatepicker();
     }
 
   };
