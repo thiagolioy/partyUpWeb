@@ -8,6 +8,12 @@ var PartyUp = PartyUp || (function() {
     });
   };
 
+  var bindRequestFocusOnDatepicker = function(){
+    $('#datepicker').focus(function(){
+      $('#datepicker').fdatepicker('show');
+    });
+  };
+
   var bindChangePartyTypeEvent = function () {
     $('#select-party-list-type').bind("change",function(f){
       var option = $('#select-party-list-type').val();
@@ -93,8 +99,8 @@ var PartyUp = PartyUp || (function() {
 
   var initParseSdk = function(){
     if(!Parse.applicationId)
-      Parse.initialize("5sjv0ulSUoP2jMeLfvblBcfWhAkhQ76bDwRVxnh6",
-      "tLOzhEPIJpzTvtQ0SszzwLv1lFC8nsucaePUc7YO");
+    Parse.initialize("5sjv0ulSUoP2jMeLfvblBcfWhAkhQ76bDwRVxnh6",
+    "tLOzhEPIJpzTvtQ0SszzwLv1lFC8nsucaePUc7YO");
   };
 
   var postParty = function(){
@@ -134,8 +140,8 @@ var PartyUp = PartyUp || (function() {
   var parseDate = function(string){
     var parts = string.split('/');
     var date = new Date(parseInt(parts[2], 10),
-                    parseInt(parts[1], 10) - 1,
-                    parseInt(parts[0], 10));
+    parseInt(parts[1], 10) - 1,
+    parseInt(parts[0], 10));
 
     return date;
   }
@@ -150,7 +156,7 @@ var PartyUp = PartyUp || (function() {
         place = place;
       },
       error:function() {
-      res.send(500, 'Failed loading place');
+        res.send(500, 'Failed loading place');
       }
     });
   }
@@ -166,6 +172,7 @@ var PartyUp = PartyUp || (function() {
     bindSelectFileEvent();
     bindSavePartyEvent();
     bindChangePartyTypeEvent();
+    bindRequestFocusOnDatepicker();
   };
 
   return {
