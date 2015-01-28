@@ -8,12 +8,26 @@ var PartyUp = PartyUp || (function() {
     });
   };
 
+  var bindChangePartyTypeEvent = function () {
+    $('#select-party-list-type').bind("change",function(f){
+      var option = $('#select-party-list-type').val();
+
+      if(option == "facebook"){
+        $("#facebook-event-id").parent().removeClass("hide");
+        $("#event-email").parent().addClass("hide");
+      }else if(option == "email"){
+        $("#event-email").parent().removeClass("hide");
+        $("#facebook-event-id").parent().addClass("hide");
+      }
+    });
+  };
+
   var bindSelectFileEvent = function () {
     $('#select-file').bind("change", function(f) {
       var files = f.target.files || f.dataTransfer.files;
       var name = files[0].name.toLowerCase();
       var contains = (name.indexOf(".png") > -1 || name.indexOf(".jpg") > -1 || name.indexOf(".jpeg") > -1);
-      
+
       if(contains){
         file = files[0];
         $("#filename").val(file.name);
@@ -151,6 +165,7 @@ var PartyUp = PartyUp || (function() {
     bindUploadButtonEvent();
     bindSelectFileEvent();
     bindSavePartyEvent();
+    bindChangePartyTypeEvent();
   };
 
   return {
