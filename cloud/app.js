@@ -3,7 +3,8 @@
 var express = require('express');
 
 // Controller code in separate files.
-var adminController = require('cloud/controllers/admin.js');
+var adminCtrl = require('cloud/controllers/admin.js');
+var partiesCtrl = require('cloud/controllers/parties.js');
 
 
 var app = express();
@@ -18,7 +19,8 @@ app.use(express.bodyParser());    // Middleware for reading request body
 
 // This is an example of hooking up a request handler with a specific request
 // path and HTTP verb using the Express routing API.
-app.get('/admin', basicAuth, adminController.index);
+app.get('/admin', basicAuth, adminCtrl.index);
+app.post('/party', basicAuth, partiesCtrl.create);
 
 
 // Attach the Express app to Cloud Code.

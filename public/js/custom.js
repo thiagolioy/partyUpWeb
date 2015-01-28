@@ -97,69 +97,32 @@ var PartyUp = PartyUp || (function() {
 
   };
 
-  var initParseSdk = function(){
-    if(!Parse.applicationId)
-    Parse.initialize("5sjv0ulSUoP2jMeLfvblBcfWhAkhQ76bDwRVxnh6",
-    "tLOzhEPIJpzTvtQ0SszzwLv1lFC8nsucaePUc7YO");
-  };
-
   var postParty = function(){
-    initParseSdk();
+    var inputs = ["name","datepicker","description","select-place",
+    "facebook-event-id","event-email","male-price","female-price"];
+    var keys = ["name","date","description","placeId","facebookId",
+    "eventEmail","malePrice","femalePrice"];
+    var params = {};
+    $.each(inputs, function(i,v){
+      params[keys[i]] = $("#"+v).val();
+    });
 
-    var Party = Parse.Object.extend("Party");
-    var newParty = new Party();
-    selectedPlace();
 
-    newParty.set("canonicalName", $("#name").val());
-    newParty.set("date", parseDate($("#date").val()));
-    newParty.set("description", $("#description").val());
-    //newParty.set("gentsPrice", );
-    newParty.set("image", new Parse.File(file.name, file));
-    //newParty.set("ladysPrice", "teste.api");
-    newParty.set("name", $("#name").val());
-    newParty.set("place", place);
-    newParty.set("sendNamesType", "facebook");
-    newParty.set("createdAt", new Date());
-    //newParty.set("updatedAt", "teste.api");
-    //newParty.set("ACL", filePath);
-
-    newParty.save(null, {
-      success: function(party) {
-        var partyUpUrl = "http://partyup.parseapp.com/";
-        window.location.replace(partyUpUrl);
+    $.ajax({
+      type: "POST",
+      url: "http://partyup.parseapp.com/party",
+      data: params,
+      contentType: "application/json",
+      success: function(data) {
+        alert("sucesso : " +data);
       },
-      error: function(party, error) {
-        // Execute any logic that should take place if the save fails.
-        // error is a Parse.Error with an error code and message.
-        alert('Failed to create new object, with error code: ' + error.message);
+      error: function(data) {
+        alert("error : " +data);
       }
     });
 
   };
 
-  var parseDate = function(string){
-    var parts = string.split('/');
-    var date = new Date(parseInt(parts[2], 10),
-    parseInt(parts[1], 10) - 1,
-    parseInt(parts[0], 10));
-
-    return date;
-  }
-
-  var selectedPlace = function(){
-    var Place = Parse.Object.extend('Place');
-    var query = new Parse.Query(Place);
-    query.descending('createdAt');
-
-    query.get($("#select-place").val(),{
-      success:function(place) {
-        place = place;
-      },
-      error:function() {
-        res.send(500, 'Failed loading place');
-      }
-    });
-  }
 
   var bindSavePartyEvent = function(){
     $('#save-button').click(function() {
