@@ -1,0 +1,43 @@
+body{
+  background-color: #263238;
+}
+
+form{
+  padding-top: 100px;
+}
+
+#top-navigation{
+  background-color: #171E22;
+  padding-top: 50px;
+  padding-bottom: 150px;
+}
+
+.default.button {
+  background-color: #171E22;
+}
+
+.partyup.meter {
+  background: #171E22;
+}
+
+#progressbar-container{
+  padding-right: 8px;
+  padding-left: 8px;
+}
+
+@media only screen and (max-width: 40em) {
+  #logo-container{
+    padding-top: 20px;
+    padding-bottom: 40px;
+  }
+} /* max-width 640px, mobile-only styles, use when QAing mobile issues */
+
+
+
+// Medium screens
+@media only screen and (min-width: 40.063em) {
+  #logo-container{
+    padding-top: 20px;
+    padding-bottom: 40px;
+  }
+}

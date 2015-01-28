@@ -2,13 +2,8 @@
 <% var title = "Admin" %>
 <% include ../_header %>
 
+<% include ../partyup/_party_form %>
 
-
-<select>
-  <% places.forEach(function(place) { %>
-    <option value="<%= place.get('id') %>"><%= place.get('name') %></option>
-  <% }) %>
-</select>
 
 
 <% include ../_footer %>
