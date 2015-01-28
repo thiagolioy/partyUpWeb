@@ -63,11 +63,15 @@ var PartyUp = PartyUp || (function() {
     },
 
     attachEvents : function () {
-      eventBindings.bindUploadButtonEvent();
-      eventBindings.bindSelectFileEvent();
-      eventBindings.bindSavePartyEvent();
-      eventBindings.bindChangePartyTypeEvent();
-      eventBindings.bindRequestFocusOnDatepicker();
+      $.each(eventBindings, function(k,m){
+        if(k.indexOf("bind") > -1)
+          eventBindings[k]();
+      });
+      // eventBindings.bindUploadButtonEvent();
+      // eventBindings.bindSelectFileEvent();
+      // eventBindings.bindSavePartyEvent();
+      // eventBindings.bindChangePartyTypeEvent();
+      // eventBindings.bindRequestFocusOnDatepicker();
     }
 
   };
