@@ -7,17 +7,16 @@ exports.create = function(req, res) {
 };
 
 exports.index = function(req, res) {
-  var query = new Parse.Query(Party);
+  var query = new Parse.Query(Place);
   query.descending('createdAt');
   query.limit = 10;
-  query.include("place");
 
-  query.find().then(function(parties) {
-    res.render('parties/parties', {
-      parties: parties
+  query.find().then(function(places) {
+    res.render('places/places', {
+      places: places
     });
   },
   function() {
-    res.send(500, 'Failed loading parties');
+    res.send(500, 'Failed loading places');
   });
 };
