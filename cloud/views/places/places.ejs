@@ -21,9 +21,18 @@
             <td> <%= place.get('state') %> </td>
           </tr>
         <% }) %>
-
     </table>
-
+    <div class="pagination-centered">
+      <ul class="pagination">
+        <% placesCount.forEach(function(pageNumber){ %>
+          <%if(pageNumber==currentPage){%>
+            <li class="current"><a href="http://partyup.parseapp.com/places?page=<%=pageNumber%>"><%=pageNumber + 1%></a></li>
+          <%} else {%>
+            <li><a href="http://partyup.parseapp.com/places?page=<%=pageNumber%>"><%=pageNumber + 1%></a></li>
+          <%}%>
+        <% }) %>
+      </ul>
+    </div>
   </div>
 </div>
 
