@@ -1,15 +1,16 @@
 var Place = Parse.Object.extend('Place');
+var limit = 10;
 
-var numberOfPartyPages = function(req,res,callback){
-  var query = new Parse.Query(Party);
+var numberOfPlacesPages = function(req,res,callback){
+  var query = new Parse.Query(Place);
   query.count({
     success:function(count) {
-      var n = Math.ceil(count / limit) - 1;
-      var pages = Array.apply(0, Array(n)).map(function (x, y) { return y + 1; });
-      callback(req,res,pages); 
+      var n = Math.ceil(count / limit);
+      var pages = Array.apply(null, {length:n}).map(Number.call,Number);
+      callback(req,res,pages);
     },
     error:function() {
-      
+
     }
   });
 };
@@ -19,24 +20,30 @@ exports.create = function(req, res) {
 };
 
 exports.index = function(req, res) {
-  
-  var fetchParties = function(req,res,numberOfPages){
-    var page = req.query.page || 1;
 
-    var query = new Parse.Query(Place);
-    query.descending('createdAt');
-    query.limit(limit);
-    query.skip(page * limit);
+    var fetchPlaces = function(req,res,numberOfPages){
 
-    query.find().then(function(places) {
-      res.render('places/places', {
-        places: places,
-        placesCount: numberOfPages,
-        currentPage : page
-      });
-    },
-    function() {
-      res.send(500, 'Failed loading places');
-    });
-  }
+        var page = req.query.page || 0;
+
+
+        console.log("params :" + req.query);
+
+        var query = new Parse.Query(Place);
+        query.descending('createdAt');
+        query.limit(limit);
+        query.skip(page * limit);
+        query.find().then(function(places) {
+          res.render('places/places', {
+            places: places,
+            placesCount: numberOfPages,
+            currentPage : page
+          });
+        },
+        function() {
+          res.send(500, 'Failed loading places');
+        });
+    };
+
+
+    numberOfPlacesPages(req,res,fetchPlaces);
 };
