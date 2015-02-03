@@ -23,7 +23,6 @@ app.post('/parties', basicAuth, partiesCtrl.create);
 app.get('/parties/:id', basicAuth, partiesCtrl.show);
 app.get('/parties', basicAuth, partiesCtrl.index);
 app.get('/parties/new', basicAuth, partiesCtrl.new);
-
 app.get('/places', basicAuth, placesCtrl.index);
 
 
