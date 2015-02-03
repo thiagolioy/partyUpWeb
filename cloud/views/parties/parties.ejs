@@ -17,7 +17,7 @@
         <% parties.forEach(function(party) { %>
           <tr>
             <td> <%= party.get('name') %> </td>
-            <td> <%= party.get('place') %> </td>
+            <td> <%= party.get('place').get('name') %> </td>
             <td> <%= party.get('date') %> </td>
             <td> <%= party.get('sendNamesType') %> </td>
             <td> <%= party.get('sendNamesTo') %> </td>
@@ -29,9 +29,9 @@
       <ul class="pagination">
         <% partiesCount.forEach(function(pageNumber){ %>
           <%if(pageNumber==currentPage){%>
-            <li class="current"><a href="http://partyup.parseapp.com/parties?page=<%=pageNumber%>"><%=pageNumber%></a></li>
+            <li class="current"><a href="http://partyup.parseapp.com/parties?page=<%=pageNumber%>"><%=pageNumber +1%></a></li>
           <%} else {%>
-            <li><a href="http://partyup.parseapp.com/parties?page=<%=pageNumber%>"><%=pageNumber%></a></li>
+            <li><a href="http://partyup.parseapp.com/parties?page=<%=pageNumber%>"><%=pageNumber + 1%></a></li>
           <%}%>
         <% }) %>
       </ul>
