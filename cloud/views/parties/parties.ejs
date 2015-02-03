@@ -15,13 +15,14 @@
         <th>Contato Lista</th>
       </tr>
         <% parties.forEach(function(party) { %>
-          <tr>
-            <td> <%= party.get('name') %> </td>
-            <td> <%= party.get('place').get('name') %> </td>
-            <td> <%= party.get('date') %> </td>
-            <td> <%= party.get('sendNamesType') %> </td>
-            <td> <%= party.get('sendNamesTo') %> </td>
-          </tr>
+            <tr>
+              <td><a href="http://partyup.parseapp.com/parties/<%=party.id%>"> <%= party.get('name') %> </a></td>
+              <td> <%= party.get('place').get('name') %> </td>
+              <td> <%= party.get('date') %> </td>
+              <td> <%= party.get('sendNamesType') %> </td>
+              <td> <%= party.get('sendNamesTo') %> </td>
+
+            </tr>
         <% }) %>
 
     </table>

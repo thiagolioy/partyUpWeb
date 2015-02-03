@@ -7,6 +7,36 @@ exports.create = function(req, res) {
 
 };
 
+exports.new = function(req,res){
+  var query = new Parse.Query(Place);
+  query.descending('createdAt');
+  query.find().then(function(places) {
+    res.render('parties/party', {
+      places: places
+    });
+  },
+  function() {
+    res.send(500, 'Failed loading places');
+  });
+}
+
+exports.show = function(req, res) {
+  var query = new Parse.Query(Party);
+  query.include("place");
+  query.get(req.params.id, {
+    success: function(party) {
+      res.render('parties/party', {
+        party: party,
+        places:[party.place]
+      });
+    },
+    error: function(object, error) {
+      // The object was not retrieved successfully.
+      // error is a Parse.Error with an error code and message.
+    }
+  });
+};
+
 var numberOfPartyPages = function(req,res,callback){
   var query = new Parse.Query(Party);
   query.count({
