@@ -25,10 +25,23 @@ exports.show = function(req, res) {
   query.include("place");
   query.get(req.params.id, {
     success: function(party) {
-      res.render('parties/party', {
-        party: party,
-        places:[party.place]
+
+      var placesQuery = new Parse.Query(Place);
+      placesQuery.descending('createdAt');
+      placesQuery.find().then(function(places) {
+
+        res.render('parties/party', {
+          party: party,
+          places:places
+        });
+
+      },
+      function() {
+        res.send(500, 'Failed loading places');
       });
+
+
+
     },
     error: function(object, error) {
       // The object was not retrieved successfully.
