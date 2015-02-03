@@ -7,18 +7,26 @@ exports.create = function(req, res) {
 
 };
 
-exports.new = function(req,res){
-  var query = new Parse.Query(Place);
-  query.descending('createdAt');
-  query.find().then(function(places) {
-    res.render('parties/party', {
-      places: places
-    });
-  },
-  function() {
-    res.send(500, 'Failed loading places');
-  });
-}
+exports.new = function(req, res) {
+
+  var fetchPlaces = function(req,res){
+      var query = new Parse.Query(Place);
+      query.descending('createdAt');
+      query.find().then(function(places) {
+        res.render('parties/party', {
+          party: new Party(),
+          places: places
+        });
+      },
+      function() {
+        res.send(500, 'Failed loading places');
+      });
+  };
+
+  fetchPlaces(req,res);
+
+};
+
 
 exports.show = function(req, res) {
   var query = new Parse.Query(Party);
