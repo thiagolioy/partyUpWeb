@@ -4,6 +4,20 @@
     <script src="/js/responsive-tables.js"></script>
     <script src="/js/parse.sdk.js"></script>
     <script src="/js/custom.js"></script>
+     <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5oxkMCRNea45hkgusyw7OitD9EkevlNo">
+    </script>
+    <script type="text/javascript">
+      function initialize() {
+        var mapOptions = {
+          center: { lat: -34.397, lng: 150.644},
+          zoom: 8
+        };
+        var map = new google.maps.Map(document.getElementById('map-canvas'),
+            mapOptions);
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
     <script>
     $(document).foundation();
     </script>
