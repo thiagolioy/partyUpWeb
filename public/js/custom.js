@@ -143,7 +143,7 @@ var PartyUp = PartyUp || (function() {
 
       $.ajax({
         type: "POST",
-        url: "http://partyup.parseapp.com/party",
+        url: "http://partyup.parseapp.com/parties",
         data: params,
         contentType: "application/json",
         success: function(data) {

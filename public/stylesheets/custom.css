@@ -6,6 +6,12 @@ form{
   padding-top: 100px;
 }
 
+#map-canvas {
+  width: 500px;
+  height: 400px;
+  background-color: #CCC;
+}
+
 #top-navigation{
   background-color: #171E22;
   padding-top: 50px;

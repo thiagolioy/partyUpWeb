@@ -1,6 +1,14 @@
 var Place = Parse.Object.extend('Place');
 var limit = 10;
 
+exports.create = function(req, res) {
+
+};
+
+exports.new = function(req, res) {
+  res.render('places/place');
+};
+
 var numberOfPlacesPages = function(req,res,callback){
   var query = new Parse.Query(Place);
   query.count({
@@ -13,10 +21,6 @@ var numberOfPlacesPages = function(req,res,callback){
 
     }
   });
-};
-
-exports.create = function(req, res) {
-
 };
 
 exports.index = function(req, res) {
