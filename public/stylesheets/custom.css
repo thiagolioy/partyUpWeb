@@ -6,11 +6,11 @@ form{
   padding-top: 100px;
 }
 
-#map-canvas {
+/*#map-canvas {
   width: 500px;
   height: 400px;
   background-color: #CCC;
-}
+}*/
 
 #top-navigation{
   background-color: #171E22;
@@ -29,6 +29,12 @@ form{
 #progressbar-container{
   padding-right: 8px;
   padding-left: 8px;
+}
+
+#map-canvas {
+  height: 400px;
+  margin: 0;
+  padding: 0;
 }
 
 @media only screen and (max-width: 40em) {
