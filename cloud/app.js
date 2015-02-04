@@ -24,6 +24,7 @@ app.get('/parties/:id', basicAuth, partiesCtrl.show);
 app.get('/parties', basicAuth, partiesCtrl.index);
 app.get('/party', basicAuth, partiesCtrl.new);
 app.get('/places', basicAuth, placesCtrl.index);
+app.get('/place', basicAuth, placesCtrl.new);
 
 
 // Attach the Express app to Cloud Code.
