@@ -35,7 +35,7 @@
 	<div class="row">
 		<div class="large-6 medium-6 small-12 columns">
 				<input type="text" class="span2"  placeholder="Data - dd/mm/yyyy" id="datepicker"
-				value="<%=party.get("date")%>" data-date-format="dd/mm/yyyy">
+				value="<%= party ? party.get('date') : '' %>" data-date-format="dd/mm/yyyy">
 			</div>
 
 		<div class="large-6 medium-6 small-12 columns">
@@ -50,7 +50,7 @@
 
 	<div class="row">
 		<div class="large-6 medium-6 small-12 columns">
-				<input id="name" type="text" placeholder="Nome" value="<%=party.get("name")%>" />
+				<input id="name" type="text" placeholder="Nome" value="<%= party ? party.get('name') : '' %>" />
 		</div>
 		<div class="large-6 medium-6 small-12 columns hide">
 				<input id="facebook-event-id"  type="text" placeholder="Facebook Event ID" />

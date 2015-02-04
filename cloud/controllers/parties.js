@@ -14,7 +14,7 @@ exports.new = function(req, res) {
       query.descending('createdAt');
       query.find().then(function(places) {
         res.render('parties/party', {
-          party: new Party(),
+          party : null,
           places: places
         });
       },
