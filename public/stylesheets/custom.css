@@ -15,7 +15,7 @@ form{
 #top-navigation{
   background-color: #171E22;
   padding-top: 50px;
-  padding-bottom: 150px;
+  padding-bottom: 50px;
 }
 
 .default.button {
@@ -32,7 +32,7 @@ form{
 }
 
 #map-canvas {
-  height: 400px;
+  height: 200px;
   margin: 0;
   padding: 0;
 }

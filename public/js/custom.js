@@ -7,12 +7,20 @@ var PartyUp = PartyUp || (function() {
   var appConfig = {
     parseAppId : "5sjv0ulSUoP2jMeLfvblBcfWhAkhQ76bDwRVxnh6",
     parseRestApiKey : "497ZfHyTwSgrhbnaYSCZiOrS8p3k0HpvtIRrKyXM",
-    parseJsApiKey : "tLOzhEPIJpzTvtQ0SszzwLv1lFC8nsucaePUc7YO"
+    parseJsApiKey : "tLOzhEPIJpzTvtQ0SszzwLv1lFC8nsucaePUc7YO",
+    mapsKey : "AIzaSyCjjqEvLoZDIFjlE6CL2z2yTsFYkwfdvKs"
 
   };
 
 
   var eventBindings = {
+
+    bindSearchAddress : function(){
+      $('#search-button').click(function(){
+        var search = $('#search-text').val();
+        actions.searchInMaps(search);
+      });
+    },
 
     bindUploadButtonEvent : function () {
       $('#upload-button').click(function(){
@@ -88,12 +96,44 @@ var PartyUp = PartyUp || (function() {
       var percentComplete = Math.round((evt.loaded / evt.total)* 100);
       var status = "" + percentComplete + "%";
       $("#progressbar-meter").animate({width:status});
+    },
+
+    updateMaps : function(lat,lng){
+      var mapOptions = {
+        center: { lat: lat, lng: lng},
+        zoom: 16
+      };
+      var map = new google.maps.Map(document.getElementById('map-canvas'),
+          mapOptions);
     }
 
 
   };
 
   var actions = {
+    createCORSRequest : function(method, url) {
+      var xhr = new XMLHttpRequest();
+      if ("withCredentials" in xhr) {
+
+        // Check if the XMLHttpRequest object has a "withCredentials" property.
+        // "withCredentials" only exists on XMLHTTPRequest2 objects.
+        xhr.open(method, url, true);
+
+      } else if (typeof XDomainRequest != "undefined") {
+
+        // Otherwise, check if XDomainRequest.
+        // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
+        xhr = new XDomainRequest();
+        xhr.open(method, url);
+
+      } else {
+
+        // Otherwise, CORS is not supported by the browser.
+        xhr = null;
+
+      }
+      return xhr;
+    },
 
     uploadFile : function(){
       var serverUrl = 'https://api.parse.com/1/files/' + file.name;
@@ -127,6 +167,32 @@ var PartyUp = PartyUp || (function() {
           alert(obj.error);
         }
       });
+
+    },
+
+    searchInMaps : function(search){
+       search = search.replace(/\s/g, "+");
+       var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+search+"&key="+appConfig.mapsKey;
+
+       var xhr = actions.createCORSRequest('GET', url);
+       if (!xhr) {
+         alert('CORS not supported');
+         return;
+       }
+
+       // Response handlers.
+       xhr.onload = function() {
+         var text = xhr.responseText;
+         var obj = jQuery.parseJSON(text);
+         var location = obj.results[0].geometry.location;
+         UIUtils.updateMaps(location.lat,location.lng);
+       };
+
+       xhr.onerror = function() {
+         alert('Woops, there was an error making the request.');
+       };
+
+       xhr.send();
 
     },
 
