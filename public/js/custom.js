@@ -25,12 +25,6 @@ var PartyUp = PartyUp || (function() {
         actions.searchInMaps(search);
       });
     },
-    bindPlaceImageOnFocusEvent : function () {
-      $('#place-image').focus(function(){
-        $('#select-file').click();
-        this.blur();
-      });
-    },
     bindSelectPlaceImageFileChangeEvent : function () {
       $('#select-file').bind("change", function(f) {
         var file = UIUtils.fetchFileFromInput('#select-file');
@@ -44,10 +38,18 @@ var PartyUp = PartyUp || (function() {
 
     bindUploadPlaceImageButtonEvent : function () {
       $('#upload-place-img-btn').click(function(){
-         var file = UIUtils.fetchFileFromInput('#select-file');
-         if(file){
-           actions.createPlace(file);
-         }
+        $('#select-file').click();
+      });
+    },
+
+    bindCreatePlaceEvent : function(){
+      $('#create-place-btn').click(function() {
+        var file = UIUtils.fetchFileFromInput('#select-file');
+        if(file){
+          actions.createPlace(file);
+        }else{
+          alert("Escolha a imagem primeiro!");
+        }
       });
     },
 
@@ -99,6 +101,13 @@ var PartyUp = PartyUp || (function() {
     },
     hasIn : function(text,string){
       return string.indexOf(text) > -1;
+    },
+    isValidPlace : function(place){
+      return true;
+    },
+    isValidMapsResult : function(result){
+      result = result || null;
+      return result == null ? false : true;
     },
     addressFromMapsObj : function(mapsObj){
       var address = {};
@@ -241,10 +250,13 @@ var PartyUp = PartyUp || (function() {
 
     },
     createPlace : function(imageFile){
+
+      if(!Utils.isValidMapsResult(bestMapsResult)){
+        alert("Busque um endereço primeiro");
+        return;
+      }
       appConfig.initParseSdk();
-
       var parseFile = new Parse.File(imageFile.name, imageFile);
-
       var location = bestMapsResult.geometry.location;
       var point = new Parse.GeoPoint({latitude: location.lat, longitude: location.lng});
 
@@ -269,21 +281,23 @@ var PartyUp = PartyUp || (function() {
       place.set("state", address.state);
       place.set("country", address.country);
 
-
       place.set("complement", complement);
       place.set("location", point);
 
-
-
+      if(!Utils.isValidPlace(place)){
+        alert('Por favor , prencha todos os campos obrigatórios');
+        return;
+      }
 
       place.save(null, {
        success: function(place) {
-         window.location.replace("https://www.partyup.parseapp.com/parties");
+         window.location.href = "http://partyup.parseapp.com/places";
        },
        error: function(place, error) {
          alert('Failed to create new object, with error code: ' + error.message);
        }
       });
+
     },
 
     postParty : function(){
