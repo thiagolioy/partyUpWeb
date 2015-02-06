@@ -6,11 +6,7 @@ form{
   padding-top: 100px;
 }
 
-/*#map-canvas {
-  width: 500px;
-  height: 400px;
-  background-color: #CCC;
-}*/
+
 
 #top-navigation{
   background-color: #171E22;
@@ -33,8 +29,7 @@ form{
 
 #map-canvas {
   height: 200px;
-  margin: 0;
-  padding: 0;
+  margin-bottom: 20px;
 }
 
 @media only screen and (max-width: 40em) {
