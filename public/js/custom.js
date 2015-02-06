@@ -21,10 +21,33 @@ var PartyUp = PartyUp || (function() {
         actions.searchInMaps(search);
       });
     },
-
-    bindUploadButtonEvent : function () {
-      $('#upload-button').click(function(){
+    bindPlaceImageOnFocusEvent : function () {
+      $('#place-image').focus(function(){
         $('#select-file').click();
+        this.blur();
+      });
+    },
+    bindSelectPlaceImageFileChangeEvent : function () {
+      $('#select-file').bind("change", function(f) {
+        var file = UIUtils.fetchFileFromInput('#select-file');
+        if(file){
+          $("#place-image").val(file.name);
+        }else{
+          $("#place-image").val("");
+        }
+      });
+    },
+
+    bindUploadPlaceImageButtonEvent : function () {
+      $('#upload-place-img-btn').click(function(){
+         var file = UIUtils.fetchFileFromInput('#select-file');
+         if(file){
+
+         }
+          // var name = "photo.jpg";
+          // alert(file.name);
+
+          // var parseFile = new Parse.File(name, file);
       });
     },
 
@@ -50,16 +73,8 @@ var PartyUp = PartyUp || (function() {
 
     bindSelectFileEvent : function () {
       $('#select-file').bind("change", function(f) {
-        var files = f.target.files || f.dataTransfer.files;
-        var name = files[0].name.toLowerCase();
-        var contains = (name.indexOf(".png") > -1 || name.indexOf(".jpg") > -1 || name.indexOf(".jpeg") > -1);
-
-        if(contains){
-          file = files[0];
-          $("#filename").val(file.name);
-        }else{
-
-        }
+        // var file = UIUtils.fetchFileFromInput('#select-file');
+        // $("#place-image").val(file.name);
       });
     },
 
@@ -92,6 +107,12 @@ var PartyUp = PartyUp || (function() {
       }
     },
 
+    fetchFileFromInput : function(input){
+      var fileUploadControl = $(input)[0];
+      var hasFiles = fileUploadControl.files.length > 0;
+      return hasFiles ? fileUploadControl.files[0] : null;
+    },
+
     updateProgressBar : function(evt){
       var percentComplete = Math.round((evt.loaded / evt.total)* 100);
       var status = "" + percentComplete + "%";
@@ -99,12 +120,19 @@ var PartyUp = PartyUp || (function() {
     },
 
     updateMaps : function(lat,lng){
+      var myLatlng = new google.maps.LatLng(lat,lng);
       var mapOptions = {
-        center: { lat: lat, lng: lng},
+        center: myLatlng,
         zoom: 16
       };
       var map = new google.maps.Map(document.getElementById('map-canvas'),
           mapOptions);
+
+      var marker = new google.maps.Marker({
+        position: myLatlng,
+        map: map,
+        title:"Lugar"
+      });
     }
 
 
@@ -114,23 +142,12 @@ var PartyUp = PartyUp || (function() {
     createCORSRequest : function(method, url) {
       var xhr = new XMLHttpRequest();
       if ("withCredentials" in xhr) {
-
-        // Check if the XMLHttpRequest object has a "withCredentials" property.
-        // "withCredentials" only exists on XMLHTTPRequest2 objects.
         xhr.open(method, url, true);
-
       } else if (typeof XDomainRequest != "undefined") {
-
-        // Otherwise, check if XDomainRequest.
-        // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
         xhr = new XDomainRequest();
         xhr.open(method, url);
-
       } else {
-
-        // Otherwise, CORS is not supported by the browser.
         xhr = null;
-
       }
       return xhr;
     },
