@@ -111,50 +111,17 @@ var PartyUp = PartyUp || (function() {
     },
     addressFromMapsObj : function(mapsObj){
       var address = {};
-      var cpms = mapsObj.address_components;
-      for (var i=0;i<cpms.length;i++) {
+      var dict = {"street_number":"number","route":"street",
+      "neighborhood":"neighborhood","locality":"city",
+      "administrative_area_level_1":"state","country":"country",
+      "postal_code":"postal_code"};
 
-        var el = cpms[i];
-        var types = el.types;
-
-        for (var j=0;j<types.length;j++) {
-
-          var value = types[j];
-
-          if(Utils.hasIn("street_number",value)){
-            address["number"] = el.long_name;
-            continue;
-          }
-
-          if(Utils.hasIn("route",value)){
-            address["street"] = el.long_name;
-            continue;
-          }
-
-          if(Utils.hasIn("neighborhood",value)){
-             address["neighborhood"] = el.long_name;
-             continue;
-          }
-          if(Utils.hasIn("locality",value)){
-            address["city"] = el.long_name;
-            continue;
-          }
-          if(Utils.hasIn("administrative_area_level_1",value)){
-            address["state"] = el.long_name;
-            continue;
-          }
-          if(Utils.hasIn("country",value)){
-            address["country"] = el.long_name;
-            continue;
-          }
-          if(Utils.hasIn("postal_code",value)){
-            address["postal_code"] = el.long_name;
-            continue;
-          }
-
-
-        }
-      }
+      _.each(mapsObj.address_components,function(el){
+        _.each(el.types,function(value,key){
+              if(_.contains(Object.keys(dict),value))
+                address[dict[value]] = el.long_name;
+          });
+      });
 
       return address;
     },
