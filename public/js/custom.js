@@ -1,15 +1,19 @@
 var PartyUp = PartyUp || (function() {
 
   var file;
-  var place;
+  var bestMapsResult;
+
 
 
   var appConfig = {
     parseAppId : "5sjv0ulSUoP2jMeLfvblBcfWhAkhQ76bDwRVxnh6",
     parseRestApiKey : "497ZfHyTwSgrhbnaYSCZiOrS8p3k0HpvtIRrKyXM",
     parseJsApiKey : "tLOzhEPIJpzTvtQ0SszzwLv1lFC8nsucaePUc7YO",
-    mapsKey : "AIzaSyCjjqEvLoZDIFjlE6CL2z2yTsFYkwfdvKs"
-
+    mapsKey : "AIzaSyCjjqEvLoZDIFjlE6CL2z2yTsFYkwfdvKs",
+    initParseSdk : function(){
+      if(!Parse.applicationId)
+        Parse.initialize(this.parseAppId,this.parseJsApiKey);
+    }
   };
 
 
@@ -30,7 +34,7 @@ var PartyUp = PartyUp || (function() {
     bindSelectPlaceImageFileChangeEvent : function () {
       $('#select-file').bind("change", function(f) {
         var file = UIUtils.fetchFileFromInput('#select-file');
-        if(file){
+        if(file && Utils.isValidImage(file)){
           $("#place-image").val(file.name);
         }else{
           $("#place-image").val("");
@@ -42,12 +46,8 @@ var PartyUp = PartyUp || (function() {
       $('#upload-place-img-btn').click(function(){
          var file = UIUtils.fetchFileFromInput('#select-file');
          if(file){
-
+           actions.createPlace(file);
          }
-          // var name = "photo.jpg";
-          // alert(file.name);
-
-          // var parseFile = new Parse.File(name, file);
       });
     },
 
@@ -86,13 +86,70 @@ var PartyUp = PartyUp || (function() {
 
     attachEvents : function () {
       $.each(eventBindings, function(k,m){
-        if(k.indexOf("bind") > -1)
+        if(Utils.hasIn("bind",k))
           eventBindings[k]();
       });
     }
 
   };
+  var Utils = {
+    isValidImage : function(file){
+       var valid = (Utils.hasIn(".png",file.name)|| Utils.hasIn(".jpeg",file.name))
+       return valid ? true : false;
+    },
+    hasIn : function(text,string){
+      return string.indexOf(text) > -1;
+    },
+    addressFromMapsObj : function(mapsObj){
+      var address = {};
+      var cpms = mapsObj.address_components;
+      for (var i=0;i<cpms.length;i++) {
 
+        var el = cpms[i];
+        var types = el.types;
+
+        for (var j=0;j<types.length;j++) {
+
+          var value = types[j];
+
+          if(Utils.hasIn("street_number",value)){
+            address["number"] = el.long_name;
+            continue;
+          }
+
+          if(Utils.hasIn("route",value)){
+            address["street"] = el.long_name;
+            continue;
+          }
+
+          if(Utils.hasIn("neighborhood",value)){
+             address["neighborhood"] = el.long_name;
+             continue;
+          }
+          if(Utils.hasIn("locality",value)){
+            address["city"] = el.long_name;
+            continue;
+          }
+          if(Utils.hasIn("administrative_area_level_1",value)){
+            address["state"] = el.long_name;
+            continue;
+          }
+          if(Utils.hasIn("country",value)){
+            address["country"] = el.long_name;
+            continue;
+          }
+          if(Utils.hasIn("postal_code",value)){
+            address["postal_code"] = el.long_name;
+            continue;
+          }
+
+
+        }
+      }
+
+      return address;
+    },
+  };
   var UIUtils = {
     toggleBounceAnimation : function(elId,turnOn){
 
@@ -139,6 +196,7 @@ var PartyUp = PartyUp || (function() {
   };
 
   var actions = {
+
     createCORSRequest : function(method, url) {
       var xhr = new XMLHttpRequest();
       if ("withCredentials" in xhr) {
@@ -153,37 +211,6 @@ var PartyUp = PartyUp || (function() {
     },
 
     uploadFile : function(){
-      var serverUrl = 'https://api.parse.com/1/files/' + file.name;
-      $.ajax({
-        xhr: function() {
-          var xhr = new window.XMLHttpRequest();
-          xhr.upload.addEventListener("progress", function(evt) {
-            if (evt.lengthComputable) {
-              updateProgressBar(evt);
-            }
-          }, false);
-          return xhr;
-        },
-        type: "POST",
-        beforeSend: function(request) {
-          request.setRequestHeader("X-Parse-Application-Id", '5sjv0ulSUoP2jMeLfvblBcfWhAkhQ76bDwRVxnh6');
-          request.setRequestHeader("X-Parse-REST-API-Key", '497ZfHyTwSgrhbnaYSCZiOrS8p3k0HpvtIRrKyXM');
-          request.setRequestHeader("Content-Type", file.type);
-          UIUtils.toggleBounceAnimation("#progressbar-container",true);
-        },
-        url: serverUrl,
-        data: file,
-        processData: false,
-        contentType: false,
-        success: function(data) {
-          UIUtils.toggleBounceAnimation("#progressbar-container",false);
-          actions.postParty(file);
-        },
-        error: function(data) {
-          var obj = jQuery.parseJSON(data);
-          alert(obj.error);
-        }
-      });
 
     },
 
@@ -201,7 +228,8 @@ var PartyUp = PartyUp || (function() {
        xhr.onload = function() {
          var text = xhr.responseText;
          var obj = jQuery.parseJSON(text);
-         var location = obj.results[0].geometry.location;
+         bestMapsResult = obj.results[0];
+         var location = bestMapsResult.geometry.location;
          UIUtils.updateMaps(location.lat,location.lng);
        };
 
@@ -211,6 +239,51 @@ var PartyUp = PartyUp || (function() {
 
        xhr.send();
 
+    },
+    createPlace : function(imageFile){
+      appConfig.initParseSdk();
+
+      var parseFile = new Parse.File(imageFile.name, imageFile);
+
+      var location = bestMapsResult.geometry.location;
+      var point = new Parse.GeoPoint({latitude: location.lat, longitude: location.lng});
+
+      var address = Utils.addressFromMapsObj(bestMapsResult);
+
+      var name = $("#place-name").val();
+      var complement = $("#place-complement").val();
+
+      var Place = Parse.Object.extend("Place");
+      var place = new Place();
+      place.set("image", parseFile);
+
+      place.set("name", name);
+      place.set("canonicalName", name.toUpperCase());
+      place.set("description", "");
+
+      place.set("street", address.street);
+      place.set("number", address.number);
+      place.set("neighborhood", address.neighborhood);
+      place.set("city", address.city);
+      place.set("canonicalCity", address.city.toUpperCase());
+      place.set("state", address.state);
+      place.set("country", address.country);
+
+
+      place.set("complement", complement);
+      place.set("location", point);
+
+
+
+
+      place.save(null, {
+       success: function(place) {
+         window.location.replace("https://www.partyup.parseapp.com/parties");
+       },
+       error: function(place, error) {
+         alert('Failed to create new object, with error code: ' + error.message);
+       }
+      });
     },
 
     postParty : function(){
