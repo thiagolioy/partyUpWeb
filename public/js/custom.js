@@ -53,6 +53,13 @@ var PartyUp = PartyUp || (function() {
       });
     },
 
+    bindCreatePartyEvent : function(){
+      $('#create-party-btn').click(function() {
+        var file = UIUtils.fetchFileFromInput('#select-file');
+        actions.createParty(file);
+      });
+    },
+
     bindRequestFocusOnDatepicker : function(){
       $('#datepicker').focus(function(){
         $('#datepicker').fdatepicker('show');
@@ -96,7 +103,7 @@ var PartyUp = PartyUp || (function() {
   };
   var Utils = {
     isValidImage : function(file){
-       var valid = (Utils.hasIn(".png",file.name)|| Utils.hasIn(".jpeg",file.name))
+       var valid = (Utils.hasIn(".png",file.name) || Utils.hasIn(".jpeg",file.name) || Utils.hasIn(".jpg",file.name));
        return valid ? true : false;
     },
     hasIn : function(text,string){
@@ -124,6 +131,18 @@ var PartyUp = PartyUp || (function() {
       });
 
       return address;
+    },
+    partyFromInputs : function(){
+      var inputs = ["name","datepicker","description","select-place",
+      "facebook-event-id","event-email","male-price","female-price"];
+      var keys = ["name","date","description","placeId","facebookId",
+      "eventEmail","malePrice","femalePrice"];
+      var party = {};
+      $.each(inputs, function(i,v){
+        party[keys[i]] = $("#"+v).val();
+      });
+
+      return party;
     },
   };
   var UIUtils = {
@@ -267,30 +286,53 @@ var PartyUp = PartyUp || (function() {
 
     },
 
-    postParty : function(){
-      var inputs = ["name","datepicker","description","select-place",
-      "facebook-event-id","event-email","male-price","female-price"];
-      var keys = ["name","date","description","placeId","facebookId",
-      "eventEmail","malePrice","femalePrice"];
-      var params = {};
-      $.each(inputs, function(i,v){
-        params[keys[i]] = $("#"+v).val();
-      });
+    createParty : function(imageFile){
+
+      appConfig.initParseSdk();
+
+      var partyObj = Utils.partyFromInputs();
+
+      var Place = Parse.Object.extend("Place");
+      var query = new Parse.Query(Place);
+
+      query.get(partyObj.placeId, {
+        success: function(place) {
+
+          var parseFile = new Parse.File(imageFile.name, imageFile);
 
 
-      $.ajax({
-        type: "POST",
-        url: "http://partyup.parseapp.com/parties",
-        data: params,
-        contentType: "application/json",
-        success: function(data) {
-          alert("sucesso : " +data);
+          var Party = Parse.Object.extend("Party");
+          var party = new Party();
+
+          party.set("image", parseFile);
+          party.set("name", partyObj.name);
+          party.set("canonicalName", partyObj.name.toUpperCase());
+          //party.set("date", partyObj.date);
+          party.set("description", partyObj.description);
+          party.set("gentsPrice", partyObj.malePrice);
+          party.set("ladysPrice", partyObj.femalePrice);
+          party.set("place", place);
+          if(partyObj.facebookId){
+            party.set("sendNamesType", "facebook");
+            party.set("sendNamesTo", partyObj.facebookId);
+          }else{
+            party.set("sendNamesType", "mail");
+            party.set("sendNamesTo", PartyUp.eventEmail);
+          }
+
+          party.save(null, {
+           success: function(party) {
+             window.location.href = "http://partyup.parseapp.com/parties";
+           },
+           error: function(party, error) {
+             alert('Failed to create new object, with error code: ' + error.message);
+           }
+          });
         },
-        error: function(data) {
-          alert("error : " +data);
+        error: function(object, error) {
+          alert('Failed to retrieve new object, with error code: ' + error.message);
         }
       });
-
     }
   };
 
