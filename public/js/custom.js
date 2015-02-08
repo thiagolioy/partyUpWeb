@@ -327,7 +327,7 @@ var PartyUp = PartyUp || (function() {
           party.set("sendNamesTo", partyObj.facebookId);
         }else{
           party.set("sendNamesType", "mail");
-          party.set("sendNamesTo", PartyUp.eventEmail);
+          party.set("sendNamesTo", partyObj.eventEmail);
         }
 
         party.save(null, {
@@ -343,7 +343,6 @@ var PartyUp = PartyUp || (function() {
 
     }
   };
-
 
   return {
     attachEvents : eventBindings.attachEvents
