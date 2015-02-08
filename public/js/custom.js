@@ -286,53 +286,61 @@ var PartyUp = PartyUp || (function() {
 
     },
 
+    fetchPlace : function(placeId,successCallback){
+      var Place = Parse.Object.extend("Place");
+      var query = new Parse.Query(Place);
+
+      query.get(placeId, {
+        success: function(place) {
+          successCallback(place);
+        },
+        error: function(object, error) {
+          alert('Failed to retrieve new object, with error code: ' + error.message);
+        }
+      });
+    },
+
     createParty : function(imageFile){
 
       appConfig.initParseSdk();
 
       var partyObj = Utils.partyFromInputs();
 
-      var Place = Parse.Object.extend("Place");
-      var query = new Parse.Query(Place);
 
-      query.get(partyObj.placeId, {
-        success: function(place) {
+      actions.fetchPlace(partyObj.placeId,function(place){
 
-          var parseFile = new Parse.File(imageFile.name, imageFile);
+        var parseFile = new Parse.File(imageFile.name, imageFile);
+        var Party = Parse.Object.extend("Party");
+        var party = new Party();
 
-
-          var Party = Parse.Object.extend("Party");
-          var party = new Party();
-
-          party.set("image", parseFile);
-          party.set("name", partyObj.name);
-          party.set("canonicalName", partyObj.name.toUpperCase());
-          //party.set("date", partyObj.date);
-          party.set("description", partyObj.description);
-          party.set("gentsPrice", partyObj.malePrice);
-          party.set("ladysPrice", partyObj.femalePrice);
-          party.set("place", place);
-          if(partyObj.facebookId){
-            party.set("sendNamesType", "facebook");
-            party.set("sendNamesTo", partyObj.facebookId);
-          }else{
-            party.set("sendNamesType", "mail");
-            party.set("sendNamesTo", PartyUp.eventEmail);
-          }
-
-          party.save(null, {
-           success: function(party) {
-             window.location.href = "http://partyup.parseapp.com/parties";
-           },
-           error: function(party, error) {
-             alert('Failed to create new object, with error code: ' + error.message);
-           }
-          });
-        },
-        error: function(object, error) {
-          alert('Failed to retrieve new object, with error code: ' + error.message);
+        party.set("image", parseFile);
+        party.set("name", partyObj.name);
+        party.set("canonicalName", partyObj.name.toUpperCase());
+        var partyDate = moment(partyObj.date, "DD/MM/YYYY");
+        party.set("date", partyDate._d);
+        party.set("description", partyObj.description);
+        party.set("gentsPrice", partyObj.malePrice);
+        party.set("ladysPrice", partyObj.femalePrice);
+        party.set("place", place);
+        if(partyObj.facebookId){
+          party.set("sendNamesType", "facebook");
+          party.set("sendNamesTo", partyObj.facebookId);
+        }else{
+          party.set("sendNamesType", "mail");
+          party.set("sendNamesTo", PartyUp.eventEmail);
         }
+
+        party.save(null, {
+         success: function(party) {
+           window.location.href = "http://partyup.parseapp.com/parties";
+         },
+         error: function(party, error) {
+           alert('Failed to create new object, with error code: ' + error.message);
+         }
+        });
+
       });
+
     }
   };
 
