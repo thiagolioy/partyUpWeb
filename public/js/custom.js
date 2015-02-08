@@ -319,8 +319,8 @@ var PartyUp = PartyUp || (function() {
         var partyDate = moment(partyObj.date, "DD/MM/YYYY");
         party.set("date", partyDate._d);
         party.set("description", partyObj.description);
-        party.set("gentsPrice", partyObj.malePrice);
-        party.set("ladysPrice", partyObj.femalePrice);
+        party.set("malePrice", partyObj.malePrice);
+        party.set("femalePrice", partyObj.femalePrice);
         party.set("place", place);
         if(partyObj.facebookId){
           party.set("sendNamesType", "facebook");
