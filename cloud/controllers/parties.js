@@ -1,7 +1,17 @@
+var moment = require('cloud/node_modules/moment.js');
+
+
 var Place = Parse.Object.extend('Place');
 var Party = Parse.Object.extend('Party');
 
 var limit = 10;
+
+
+
+var renderWithLibs = function(res,page,dict){
+  dict["moment"] = moment;
+  res.render(page, dict);
+}
 
 exports.create = function(req, res) {
 
@@ -88,7 +98,7 @@ exports.index = function(req, res) {
       query.skip(page * limit);
       query.include("place");
       query.find().then(function(parties) {
-        res.render('parties/parties', {
+        renderWithLibs(res,'parties/parties', {
           parties: parties,
           partiesCount: numberOfPages,
           currentPage : page
