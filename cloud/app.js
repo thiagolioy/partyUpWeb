@@ -1,7 +1,5 @@
-
 // These two lines are required to initialize Express in Cloud Code.
 var express = require('express');
-
 // Controller code in separate files.
 var partiesCtrl = require('cloud/controllers/parties.js');
 var placesCtrl = require('cloud/controllers/places.js');
