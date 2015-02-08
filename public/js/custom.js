@@ -29,15 +29,15 @@ var PartyUp = PartyUp || (function() {
       $('#select-file').bind("change", function(f) {
         var file = UIUtils.fetchFileFromInput('#select-file');
         if(file && Utils.isValidImage(file)){
-          $("#place-image").val(file.name);
+          $("#image-name").val(file.name);
         }else{
-          $("#place-image").val("");
+          $("#image-name").val("");
         }
       });
     },
 
     bindUploadPlaceImageButtonEvent : function () {
-      $('#upload-place-img-btn').click(function(){
+      $('#upload-img-btn').click(function(){
         $('#select-file').click();
       });
     },
@@ -83,7 +83,7 @@ var PartyUp = PartyUp || (function() {
     bindSelectFileEvent : function () {
       $('#select-file').bind("change", function(f) {
         // var file = UIUtils.fetchFileFromInput('#select-file');
-        // $("#place-image").val(file.name);
+        // $("#image-name").val(file.name);
       });
     },
 
