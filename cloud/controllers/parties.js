@@ -1,4 +1,5 @@
-var moment = require('cloud/node_modules/moment.js');
+var moment = require('cloud/node_mods/moment.js');
+var _ = require('underscore');
 
 
 var Place = Parse.Object.extend('Place');
@@ -13,6 +14,16 @@ var renderWithLibs = function(res,page,dict){
   res.render(page, dict);
 }
 
+var uniqueCitiesOn = function(places){
+  var cities = [];
+  _.each(places , function(p){
+    var city = p.get('city');
+    if(!_.contains(cities,city))
+      cities.push(city);
+  });
+  return cities;
+};
+
 exports.create = function(req, res) {
 
 };
@@ -25,7 +36,8 @@ exports.new = function(req, res) {
       query.find().then(function(places) {
         res.render('parties/party', {
           party : null,
-          places: places
+          places: places,
+          cities: uniqueCitiesOn(places)
         });
       },
       function() {

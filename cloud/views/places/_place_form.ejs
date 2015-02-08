@@ -2,17 +2,7 @@
 
 
 	<div class="row">
-		<div class="large-6 medium-6 small-12 columns">
-			<div class="row collapse">
-				<div class="large-8 medium-8 small-8 columns">
-					<input type="file" id="select-file" class="hide" >
-					<input type="text" id="place-image" readonly placeholder="Imagem do Lugar">
-				</div>
-				<div class="large-4 medium-4 small-4 columns">
-					<a href="#" class="button postfix default" id="upload-place-img-btn">Selecionar</a>
-				</div>
-			</div>
-		</div>
+		<% include ../commons/_image_uploader %>
 
 		<div class="large-6 medium-6 small-12 columns">
 			<input type="text" id="place-name" placeholder="Nome">
