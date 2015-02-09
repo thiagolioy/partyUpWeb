@@ -3,8 +3,6 @@ var PartyUp = PartyUp || (function() {
   var file;
   var bestMapsResult;
 
-
-
   var appConfig = {
     parseAppId : "5sjv0ulSUoP2jMeLfvblBcfWhAkhQ76bDwRVxnh6",
     parseRestApiKey : "497ZfHyTwSgrhbnaYSCZiOrS8p3k0HpvtIRrKyXM",
@@ -15,7 +13,6 @@ var PartyUp = PartyUp || (function() {
         Parse.initialize(this.parseAppId,this.parseJsApiKey);
     }
   };
-
 
   var eventBindings = {
 
@@ -101,6 +98,7 @@ var PartyUp = PartyUp || (function() {
     }
 
   };
+
   var Utils = {
     isValidImage : function(file){
        var valid = (Utils.hasIn(".png",file.name) || Utils.hasIn(".jpeg",file.name) || Utils.hasIn(".jpg",file.name));
@@ -133,9 +131,9 @@ var PartyUp = PartyUp || (function() {
       return address;
     },
     partyFromInputs : function(){
-      var inputs = ["name","datepicker","description","select-place",
+      var inputs = ["name","datepicker","hour","description","select-place",
       "facebook-event-id","event-email","male-price","female-price"];
-      var keys = ["name","date","description","placeId","facebookId",
+      var keys = ["name","date","hour","description","placeId","facebookId",
       "eventEmail","malePrice","femalePrice"];
       var party = {};
       $.each(inputs, function(i,v){
@@ -145,6 +143,7 @@ var PartyUp = PartyUp || (function() {
       return party;
     },
   };
+
   var UIUtils = {
     toggleBounceAnimation : function(elId,turnOn){
 
@@ -287,6 +286,12 @@ var PartyUp = PartyUp || (function() {
     },
 
     fetchPlace : function(placeId,successCallback){
+
+      if(!placeId){
+        alert('Por favor, escolha uma cidade!');
+        return;
+      }
+
       var Place = Parse.Object.extend("Place");
       var query = new Parse.Query(Place);
 
@@ -306,17 +311,19 @@ var PartyUp = PartyUp || (function() {
 
       var partyObj = Utils.partyFromInputs();
 
-
       actions.fetchPlace(partyObj.placeId,function(place){
 
         var parseFile = new Parse.File(imageFile.name, imageFile);
         var Party = Parse.Object.extend("Party");
         var party = new Party();
 
+        moment().utcOffset(-180);
+        moment().locale("br");
+        var partyDate = moment(partyObj.date + " " + partyObj.hour, "DD/MM/YYYY HH:mm");
+
         party.set("image", parseFile);
         party.set("name", partyObj.name);
         party.set("canonicalName", partyObj.name.toUpperCase());
-        var partyDate = moment(partyObj.date, "DD/MM/YYYY");
         party.set("date", partyDate._d);
         party.set("description", partyObj.description);
         party.set("malePrice", partyObj.malePrice);

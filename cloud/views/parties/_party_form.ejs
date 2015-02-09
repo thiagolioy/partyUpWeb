@@ -16,23 +16,25 @@
 					<option value="" disabled selected>Escolha o Lugar</option>
 					<% places.forEach(function(place) { %>
 						<option value="<%= place.id %>"><%= place.get('name') %></option>
-						<% }) %>
-					</select>
-				</div>
-
-
+					<% }) %>
+				</select>
+			</div>
 		</div>
-
-
-
 			<div class="row">
 				<div class="large-6 medium-6 small-12 columns">
 					<input id="name" type="text" placeholder="Nome" value="<%= party ? party.get('name') : '' %>" />
 				</div>
 
 				<div class="large-6 medium-6 small-12 columns">
-					<input type="text" class="span2"  placeholder="Data - dd/mm/yyyy" id="datepicker"
-					value="<%= party ? party.get('date') : '' %>" data-date-format="dd/mm/yyyy">
+					<div class="row collapse">
+    					<div class="large-8 medium-8 small-8 columns">
+							<input type="text" class="span2"  placeholder="Data - dd/mm/yyyy" id="datepicker"
+							value="<%= party ? party.get('date') : '' %>" data-date-format="dd/mm/yyyy">
+						</div>
+						<div class="large-4 medium-4 small-4 columns">
+							<input type="text" class="span2"  placeholder="Hora - hh:MM" id="hour">
+						</div>
+					</div>
 				</div>
 			</div>
 
