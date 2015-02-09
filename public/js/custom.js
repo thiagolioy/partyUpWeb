@@ -10,7 +10,7 @@ var PartyUp = PartyUp || (function() {
     mapsKey : "AIzaSyCjjqEvLoZDIFjlE6CL2z2yTsFYkwfdvKs",
     initParseSdk : function(){
       if(!Parse.applicationId)
-        Parse.initialize(this.parseAppId,this.parseJsApiKey);
+      Parse.initialize(this.parseAppId,this.parseJsApiKey);
     }
   };
 
@@ -77,6 +77,20 @@ var PartyUp = PartyUp || (function() {
       });
     },
 
+    bindChangePartyCityEvent : function () {
+      $('#select-city').bind("change",function(f){
+        var city = $('#select-city').val();
+        actions.fetchPlaces(city,function(places){
+          var t = "<% places.forEach(function(place) { %>\
+            <option value='<%= place.id %>'><%= place.get('name') %></option>\
+          <% }) %>"
+          var template = _.template(t);
+          $('#select-place').html(template({places:places}));
+        });
+
+      });
+    },
+
     bindSelectFileEvent : function () {
       $('#select-file').bind("change", function(f) {
         // var file = UIUtils.fetchFileFromInput('#select-file');
@@ -93,7 +107,7 @@ var PartyUp = PartyUp || (function() {
     attachEvents : function () {
       $.each(eventBindings, function(k,m){
         if(Utils.hasIn("bind",k))
-          eventBindings[k]();
+        eventBindings[k]();
       });
     }
 
@@ -101,8 +115,8 @@ var PartyUp = PartyUp || (function() {
 
   var Utils = {
     isValidImage : function(file){
-       var valid = (Utils.hasIn(".png",file.name) || Utils.hasIn(".jpeg",file.name) || Utils.hasIn(".jpg",file.name));
-       return valid ? true : false;
+      var valid = (Utils.hasIn(".png",file.name) || Utils.hasIn(".jpeg",file.name) || Utils.hasIn(".jpg",file.name));
+      return valid ? true : false;
     },
     hasIn : function(text,string){
       return string.indexOf(text) > -1;
@@ -123,9 +137,9 @@ var PartyUp = PartyUp || (function() {
 
       _.each(mapsObj.address_components,function(el){
         _.each(el.types,function(value,key){
-              if(_.contains(Object.keys(dict),value))
-                address[dict[value]] = el.long_name;
-          });
+          if(_.contains(Object.keys(dict),value))
+          address[dict[value]] = el.long_name;
+        });
       });
 
       return address;
@@ -177,7 +191,7 @@ var PartyUp = PartyUp || (function() {
         zoom: 16
       };
       var map = new google.maps.Map(document.getElementById('map-canvas'),
-          mapOptions);
+      mapOptions);
 
       var marker = new google.maps.Marker({
         position: myLatlng,
@@ -209,29 +223,29 @@ var PartyUp = PartyUp || (function() {
     },
 
     searchInMaps : function(search){
-       search = search.replace(/\s/g, "+");
-       var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+search+"&key="+appConfig.mapsKey;
+      search = search.replace(/\s/g, "+");
+      var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+search+"&key="+appConfig.mapsKey;
 
-       var xhr = actions.createCORSRequest('GET', url);
-       if (!xhr) {
-         alert('CORS not supported');
-         return;
-       }
+      var xhr = actions.createCORSRequest('GET', url);
+      if (!xhr) {
+        alert('CORS not supported');
+        return;
+      }
 
-       // Response handlers.
-       xhr.onload = function() {
-         var text = xhr.responseText;
-         var obj = jQuery.parseJSON(text);
-         bestMapsResult = obj.results[0];
-         var location = bestMapsResult.geometry.location;
-         UIUtils.updateMaps(location.lat,location.lng);
-       };
+      // Response handlers.
+      xhr.onload = function() {
+        var text = xhr.responseText;
+        var obj = jQuery.parseJSON(text);
+        bestMapsResult = obj.results[0];
+        var location = bestMapsResult.geometry.location;
+        UIUtils.updateMaps(location.lat,location.lng);
+      };
 
-       xhr.onerror = function() {
-         alert('Woops, there was an error making the request.');
-       };
+      xhr.onerror = function() {
+        alert('Woops, there was an error making the request.');
+      };
 
-       xhr.send();
+      xhr.send();
 
     },
     createPlace : function(imageFile){
@@ -275,12 +289,12 @@ var PartyUp = PartyUp || (function() {
       }
 
       place.save(null, {
-       success: function(place) {
-         window.location.href = "http://partyup.parseapp.com/places";
-       },
-       error: function(place, error) {
-         alert('Failed to create new object, with error code: ' + error.message);
-       }
+        success: function(place) {
+          window.location.href = "http://partyup.parseapp.com/places";
+        },
+        error: function(place, error) {
+          alert('Failed to create new object, with error code: ' + error.message);
+        }
       });
 
     },
@@ -301,6 +315,23 @@ var PartyUp = PartyUp || (function() {
         },
         error: function(object, error) {
           alert('Failed to retrieve new object, with error code: ' + error.message);
+        }
+      });
+    },
+
+    fetchPlaces : function(city,callback){
+      appConfig.initParseSdk();
+      var Place = Parse.Object.extend("Place");
+      var query = new Parse.Query(Place);
+      query.descending('createdAt');
+      if(city)
+        query.equalTo("canonicalCity", city.toUpperCase());
+      query.find({
+        success: function(places) {
+          callback(places);
+        },
+        error: function(error) {
+          alert("Error: " + error.code + " " + error.message);
         }
       });
     },
@@ -338,12 +369,12 @@ var PartyUp = PartyUp || (function() {
         }
 
         party.save(null, {
-         success: function(party) {
-           window.location.href = "http://partyup.parseapp.com/parties";
-         },
-         error: function(party, error) {
-           alert('Failed to create new object, with error code: ' + error.message);
-         }
+          success: function(party) {
+            window.location.href = "http://partyup.parseapp.com/parties";
+          },
+          error: function(party, error) {
+            alert('Failed to create new object, with error code: ' + error.message);
+          }
         });
 
       });
