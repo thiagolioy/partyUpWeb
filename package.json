@@ -1,0 +1,22 @@
+{
+  "name": "partyUpWeb",
+  "version": "1.0.0",
+  "description": "partyUpWeb ==========",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "personal:thiagolioy/partyUpWeb.git"
+  },
+  "author": "Thiago Lioy",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-bump": "^0.1.13",
+    "gulp-concat": "^2.4.3",
+    "gulp-jshint": "^1.9.2",
+    "gulp-load-plugins": "^0.8.0"
+  }
+}
