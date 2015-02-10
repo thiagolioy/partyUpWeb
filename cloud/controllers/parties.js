@@ -34,7 +34,7 @@ exports.new = function(req, res) {
       var query = new Parse.Query(Place);
       query.descending('createdAt');
       query.find().then(function(places) {
-        res.render('parties/party', {
+        res.render('dist/parties/party', {
           party : null,
           places: places,
           cities: uniqueCitiesOn(places)
@@ -60,7 +60,7 @@ exports.show = function(req, res) {
       placesQuery.descending('createdAt');
       placesQuery.find().then(function(places) {
 
-        res.render('parties/party', {
+        res.render('dist/parties/party', {
           party: party,
           places:places
         });
@@ -110,7 +110,7 @@ exports.index = function(req, res) {
       query.skip(page * limit);
       query.include("place");
       query.find().then(function(parties) {
-        renderWithLibs(res,'parties/parties', {
+        renderWithLibs(res,'dist/parties/parties', {
           parties: parties,
           partiesCount: numberOfPages,
           currentPage : page

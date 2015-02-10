@@ -6,7 +6,7 @@ exports.create = function(req, res) {
 };
 
 exports.new = function(req, res) {
-  res.render('places/place');
+  res.render('dist/places/place');
 };
 
 var numberOfPlacesPages = function(req,res,callback){
@@ -37,7 +37,7 @@ exports.index = function(req, res) {
         query.limit(limit);
         query.skip(page * limit);
         query.find().then(function(places) {
-          res.render('places/places', {
+          res.render('dist/places/places', {
             places: places,
             placesCount: numberOfPages,
             currentPage : page
