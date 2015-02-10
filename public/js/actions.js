@@ -125,7 +125,7 @@ module.exports = {
     });
   },
 
-  fetchPlaces : function(city,callback){
+   fetchPlaces : function(city,callback){
     this.initParseSdk();
     var Place = Parse.Object.extend("Place");
     var query = new Parse.Query(Place);
