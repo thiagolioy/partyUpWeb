@@ -16,13 +16,13 @@ var PartyUp = PartyUp || (function() {
 
   var eventBindings = {
 
-     bindSearchAddress : function(){
+    bindSearchAddress : function(){
       $('#search-button').click(function(){
         var search = $('#search-text').val();
         actions.searchInMaps(search);
       });
     },
-        bindSelectPlaceImageFileChangeEvent : function () {
+    bindSelectPlaceImageFileChangeEvent : function () {
       $('#select-file').bind("change", function(f) {
         var file = UIUtils.fetchFileFromInput('#select-file');
         if(file && Utils.isValidImage(file)){
