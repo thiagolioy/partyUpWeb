@@ -5,6 +5,7 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var htmlmin = require('gulp-htmlmin');
+var ignore = require('gulp-ignore');
 
 
 //Default task
@@ -31,9 +32,11 @@ gulp.task('scripts',function(){
 
 //Minify Html
 gulp.task('htmlmin', function() {
+  var dist = 'cloud/views/dist';
   gulp.src('cloud/views/**/*.ejs')
+    .pipe(ignore.exclude(dist))
     .pipe(htmlmin({collapseWhitespace: true}))
-    .pipe(gulp.dest('cloud/views/dist'))
+    .pipe(gulp.dest(dist))
 });
 
 //Watch task
