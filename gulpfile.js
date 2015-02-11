@@ -9,6 +9,9 @@ var buffer = require('vinyl-buffer');
 var sourcemaps = require('gulp-sourcemaps');
 var del = require('del');
 var runSequence = require('run-sequence');
+var streamqueue  = require('streamqueue');
+var concat = require("gulp-concat");
+
 
 
 //Default task
@@ -19,6 +22,38 @@ gulp.task('lint',function(){
   return gulp.src('public/js/*.js')
              .pipe(jshint())
              .pipe(jshint.reporter('default'));
+});
+
+gulp.task('alljs', function() {
+  return streamqueue({ objectMode: true },
+             gulp.src("public/js/dist/vendors.js"),
+             gulp.src("public/js/dist/combined*.js"))
+             .pipe(concat("all.js"))
+            // .pipe(uglify())
+             .pipe(gulp.dest("./public/js/dist/"));
+});
+
+gulp.task('vjsmin', function() {
+  var DIR = "public/bower_components/";
+  var jquery = DIR+"jquery/dist/jquery.js";//has min
+  var foundation = DIR+"foundation/js/foundation.js"; //has min
+  var fdtDatepicker = DIR+"foundation-datepicker/js/*.js";
+  var respTables = DIR+"responsive-tables/*.js";
+  var parseSdk = DIR+"parse/parse.js"; //has min
+  var moment = DIR+"moment/*.js";
+  var gMaps = DIR+"gmaps.js/gmaps.js";
+
+  return streamqueue({ objectMode: true },
+             gulp.src(jquery),
+             gulp.src(foundation),
+             gulp.src(fdtDatepicker),
+             gulp.src(respTables),
+             gulp.src(parseSdk),
+             gulp.src(moment))
+            //  gulp.src(gMaps))
+             .pipe(concat("vendors.js"))
+            // .pipe(uglify())
+             .pipe(gulp.dest("./public/js/dist/"));
 });
 
 gulp.task('jsmin', function() {
@@ -32,7 +67,7 @@ gulp.task('jsmin', function() {
       .pipe(buffer())
       .pipe(sourcemaps.init({loadMaps: true}))
         // Add transformation tasks to the pipeline here.
-        .pipe(uglify())
+        // .pipe(uglify())
       // .pipe(sourcemaps.write('./'))
       .pipe(gulp.dest('./public/js/dist/'));
   };
@@ -58,7 +93,11 @@ gulp.task('htmlmin', function() {
 
 //Clean
 gulp.task('clean', function (cb) {
-  del(['./cloud/views/dist/dist'], cb);
+  del(['./cloud/views/dist/dist',
+      './public/bower_components',
+      './public/js/dist/vendors*.js',
+      './public/js/dist/combined*.js'
+      ], cb);
 });
 
 //Watch task

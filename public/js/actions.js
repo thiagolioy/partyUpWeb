@@ -11,6 +11,14 @@ module.exports = {
       Parse.initialize(keys.parseAppId,keys.parseJsApiKey);
   },
 
+  initGMaps : function(){
+    // new GMaps({
+    //   div: '#map-canvas',
+    //   lat: 23.5500,
+    //   lng: 46.6333
+    // });
+  },
+
   createCORSRequest : function(method, url) {
     var xhr = new XMLHttpRequest();
     if ("withCredentials" in xhr) {
@@ -30,8 +38,21 @@ module.exports = {
 
   searchInMaps : function(search){
     search = search.replace(/\s/g, "+");
-    var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+search+"&key="+keys.mapsKey;
+    // alert("search : " + search);
+    // var maps = new GMaps();
+    // alert("gMaps : " + maps);
+    // maps.geocode({
+    //   address: search,
+    //   callback: function(results, status) {
+    //     if (status == 'OK') {
+    //       var location = results[0].geometry.location;
+    //       uiutils.updateMaps(location.lat,location.lng);
+    //     }
+    //   }
+    // });
 
+    var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+search+"&key="+keys.mapsKey;
+    
     var xhr = this.createCORSRequest('GET', url);
     if (!xhr) {
       alert('CORS not supported');

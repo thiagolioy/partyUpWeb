@@ -1,0 +1,26 @@
+{
+  "name": "partyUpWeb",
+  "version": "0.0.1",
+  "main": "./public/stylesheets/custom.css",
+  "authors": [
+    "Thiago Lioy"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.3",
+    "foundation": "~5.5.1",
+    "foundation-datepicker": "~1.1.0",
+    "parse": "~1.3.4",
+    "moment": "~2.9.0",
+    "responsive-tables": "*",
+    "gmaps.js": "~0.4.16"
+  }
+}
