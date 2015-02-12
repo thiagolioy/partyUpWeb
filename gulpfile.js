@@ -14,10 +14,11 @@ var concat = require("gulp-concat");
 var cssmin = require('gulp-cssmin');
 var imagemin = require('gulp-imagemin');
 var pngquant = require('imagemin-pngquant');
+var shell = require('gulp-shell')
 
 
 //Default task
-gulp.task('default',['watch']);
+gulp.task('default',['bwinstall','watch']);
 
 
 //Lint task
@@ -27,7 +28,7 @@ gulp.task('lint',function(){
              .pipe(jshint.reporter('default'));
 });
 
-
+//js Tasks
 gulp.task('alljs', function() {
   var DIR = "public/bower_components/";
   var jquery = DIR+"jquery/dist/jquery.js";//has min
@@ -53,6 +54,26 @@ gulp.task('alljs', function() {
              .pipe(gulp.dest("./public/js/dist/"));
 });
 
+gulp.task('jsmin', function() {
+
+  var bundler = browserify('./public/js/index.js');
+
+  var bundle = function() {
+    return bundler
+      .bundle()
+      .pipe(source('combined.min.js'))
+      .pipe(buffer())
+      .pipe(sourcemaps.init({loadMaps: true}))
+        // Add transformation tasks to the pipeline here.
+        // .pipe(uglify())
+      // .pipe(sourcemaps.write('./'))
+      .pipe(gulp.dest('./public/js/dist/'));
+  };
+
+  return bundle();
+});
+
+//css tasks
 gulp.task('allcss', function() {
   var DIR = "public/bower_components/";
   var normalize = DIR+"foundation/css/normalize.css";
@@ -75,27 +96,7 @@ gulp.task('allcss', function() {
              .pipe(gulp.dest("./public/stylesheets/dist/"));
 });
 
-
-gulp.task('jsmin', function() {
-
-  var bundler = browserify('./public/js/index.js');
-
-  var bundle = function() {
-    return bundler
-      .bundle()
-      .pipe(source('combined.min.js'))
-      .pipe(buffer())
-      .pipe(sourcemaps.init({loadMaps: true}))
-        // Add transformation tasks to the pipeline here.
-        // .pipe(uglify())
-      // .pipe(sourcemaps.write('./'))
-      .pipe(gulp.dest('./public/js/dist/'));
-  };
-
-  return bundle();
-});
-
-//Minify Html
+//Html tasks
 gulp.task('htmlmin', function() {
   var dist = './cloud/views/dist';
   return gulp.src('./cloud/views/**/*.ejs')
@@ -104,7 +105,7 @@ gulp.task('htmlmin', function() {
 });
 
 
-//ImageMin
+//Image tasks
 gulp.task('imgmin', function () {
     return gulp.src('public/imgs/*')
         .pipe(imagemin({
@@ -115,12 +116,13 @@ gulp.task('imgmin', function () {
         .pipe(gulp.dest('public/imgs/dist'));
 });
 
-//Clean
+//Clean tasks
 gulp.task('clean', function (cb) {
   del(['./cloud/views/dist/dist',
       './public/js/dist/combined*.js'
       ], cb);
 });
+
 gulp.task('cleanbower', function (cb) {
   del(['./public/bower_components'], cb);
 });
@@ -141,8 +143,19 @@ gulp.task('watchjs', function(callback) {
 });
 
 gulp.task('watchhtml', function(callback) {
-  runSequence('imgmin',
-              'htmlmin',
+  runSequence('htmlmin',
               'clean',
               callback);
 });
+
+//Shell Tasks
+gulp.task('bwinstall', shell.task(['bower install']));
+
+gulp.task('upToParse', shell.task(['parse deploy']));
+
+gulp.task('deploy', function (callback) {
+  runSequence('imgmin',
+              'cleanbower',
+              'upToParse',
+              callback);
+})
