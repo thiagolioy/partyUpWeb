@@ -14,7 +14,8 @@ var concat = require("gulp-concat");
 var cssmin = require('gulp-cssmin');
 var imagemin = require('gulp-imagemin');
 var pngquant = require('imagemin-pngquant');
-var shell = require('gulp-shell')
+var shell = require('gulp-shell');
+var concatCss = require('gulp-concat-css');
 
 
 //Default task
@@ -91,7 +92,7 @@ gulp.task('allcss', function() {
              gulp.src(animatecss),
              gulp.src(respTables),
              gulp.src(custom))
-             .pipe(concat("all.min.css"))
+             .pipe(concatCss("all.min.css"))
              .pipe(cssmin())
              .pipe(gulp.dest("./public/stylesheets/dist/"));
 });
