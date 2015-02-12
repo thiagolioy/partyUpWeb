@@ -12,10 +12,12 @@ var runSequence = require('run-sequence');
 var streamqueue  = require('streamqueue');
 var concat = require("gulp-concat");
 var cssmin = require('gulp-cssmin');
+var imagemin = require('gulp-imagemin');
+var pngquant = require('imagemin-pngquant');
 
 
 //Default task
-gulp.task('default',['lint','jsmin','htmlmin','clean']);
+gulp.task('default',['watch']);
 
 
 //Lint task
@@ -101,6 +103,18 @@ gulp.task('htmlmin', function() {
     .pipe(gulp.dest(dist));
 });
 
+
+//ImageMin
+gulp.task('imgmin', function () {
+    return gulp.src('public/imgs/*')
+        .pipe(imagemin({
+            progressive: true,
+            svgoPlugins: [{removeViewBox: false}],
+            use: [pngquant()]
+        }))
+        .pipe(gulp.dest('public/imgs/dist'));
+});
+
 //Clean
 gulp.task('clean', function (cb) {
   del(['./cloud/views/dist/dist',
@@ -127,7 +141,8 @@ gulp.task('watchjs', function(callback) {
 });
 
 gulp.task('watchhtml', function(callback) {
-  runSequence('htmlmin',
+  runSequence('imgmin',
+              'htmlmin',
               'clean',
               callback);
 });
