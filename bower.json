@@ -22,5 +22,9 @@
     "moment": "~2.9.0",
     "responsive-tables": "*",
     "gmaps.js": "~0.4.16"
+  },
+  "devDependencies": {
+    "fontawesome": "~4.3.0",
+    "animate.css": "~3.2.0"
   }
 }

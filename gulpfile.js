@@ -11,11 +11,12 @@ var del = require('del');
 var runSequence = require('run-sequence');
 var streamqueue  = require('streamqueue');
 var concat = require("gulp-concat");
-
+var cssmin = require('gulp-cssmin');
 
 
 //Default task
 gulp.task('default',['lint','jsmin','htmlmin','clean']);
+
 
 //Lint task
 gulp.task('lint',function(){
@@ -24,16 +25,8 @@ gulp.task('lint',function(){
              .pipe(jshint.reporter('default'));
 });
 
-gulp.task('alljs', function() {
-  return streamqueue({ objectMode: true },
-             gulp.src("public/js/dist/vendors.js"),
-             gulp.src("public/js/dist/combined*.js"))
-             .pipe(concat("all.js"))
-            // .pipe(uglify())
-             .pipe(gulp.dest("./public/js/dist/"));
-});
 
-gulp.task('vjsmin', function() {
+gulp.task('alljs', function() {
   var DIR = "public/bower_components/";
   var jquery = DIR+"jquery/dist/jquery.js";//has min
   var foundation = DIR+"foundation/js/foundation.js"; //has min
@@ -43,18 +36,43 @@ gulp.task('vjsmin', function() {
   var moment = DIR+"moment/*.js";
   var gMaps = DIR+"gmaps.js/gmaps.js";
 
+  var customJs = "public/js/dist/combined*.js";
+
   return streamqueue({ objectMode: true },
              gulp.src(jquery),
              gulp.src(foundation),
              gulp.src(fdtDatepicker),
              gulp.src(respTables),
              gulp.src(parseSdk),
-             gulp.src(moment))
-            //  gulp.src(gMaps))
-             .pipe(concat("vendors.js"))
+             gulp.src(moment),
+             gulp.src(customJs))
+             .pipe(concat("all.min.js"))
             // .pipe(uglify())
              .pipe(gulp.dest("./public/js/dist/"));
 });
+
+gulp.task('allcss', function() {
+  var DIR = "public/bower_components/";
+  var normalize = DIR+"foundation/css/normalize.css";
+  var foundation = DIR+"foundation/css/foundation.css";
+  var fdtDatepicker = DIR+"foundation-datepicker/stylesheets/foundation-datepicker.css";
+  var fontawesome = DIR+"fontawesome/css/font-awesome.css";
+  var animatecss = DIR+"animate.css/animate.css";
+  var respTables = DIR+"responsive-tables/responsive-tables.css";
+  var custom = "public/stylesheets/custom.css";
+
+  return streamqueue({ objectMode: true },
+             gulp.src(normalize),
+             gulp.src(foundation),
+             gulp.src(fontawesome),
+             gulp.src(animatecss),
+             gulp.src(respTables),
+             gulp.src(custom))
+             .pipe(concat("all.min.css"))
+             .pipe(cssmin())
+             .pipe(gulp.dest("./public/stylesheets/dist/"));
+});
+
 
 gulp.task('jsmin', function() {
 
@@ -75,14 +93,6 @@ gulp.task('jsmin', function() {
   return bundle();
 });
 
-//Minify Html and clean
-gulp.task('htmlminclean', function(callback) {
-  runSequence('htmlmin',
-              'clean',
-              callback);
-});
-
-
 //Minify Html
 gulp.task('htmlmin', function() {
   var dist = './cloud/views/dist';
@@ -94,14 +104,30 @@ gulp.task('htmlmin', function() {
 //Clean
 gulp.task('clean', function (cb) {
   del(['./cloud/views/dist/dist',
-      './public/bower_components',
-      './public/js/dist/vendors*.js',
       './public/js/dist/combined*.js'
       ], cb);
 });
+gulp.task('cleanbower', function (cb) {
+  del(['./public/bower_components'], cb);
+});
 
-//Watch task
+//Watch tasks
 gulp.task('watch',function(){
-  gulp.watch('public/js/*.js',['lint','jsmin']);
-  gulp.watch('./cloud/views/*.ejs',['htmlminclean']);
+  gulp.watch('public/js/*.js',["watchjs"]);
+  gulp.watch('./cloud/views/*.ejs',['watchhtml']);
+  gulp.watch('public/stylesheets/*.css',['allcss']);
+});
+
+gulp.task('watchjs', function(callback) {
+  runSequence('lint',
+              'jsmin',
+              'alljs',
+              'clean',
+              callback);
+});
+
+gulp.task('watchhtml', function(callback) {
+  runSequence('htmlmin',
+              'clean',
+              callback);
 });

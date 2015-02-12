@@ -3,7 +3,7 @@ module.exports = {
   toggleBounceAnimation : function(elId,turnOn){
 
     if(turnOn){
-      $(elId).removeClass("hide");
+       $(elId).removeClass("hide");
       $(elId).removeClass('animated bounceOutUp');
       $(elId).addClass('animated bounceInDown');
     }else{
