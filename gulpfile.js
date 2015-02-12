@@ -79,8 +79,8 @@ gulp.task('allcss', function() {
   var DIR = "public/bower_components/";
   var normalize = DIR+"foundation/css/normalize.css";
   var foundation = DIR+"foundation/css/foundation.css";
-  var fdtDatepicker = DIR+"foundation-datepicker/stylesheets/foundation-datepicker.css";
-  var fontawesome = DIR+"fontawesome/css/font-awesome.css";
+  var fdtDatepicker = "public/stylesheets/foundation.datepicker.css";
+  var fontawesome = "public/stylesheets/font-awesome.css";
   var animatecss = DIR+"animate.css/animate.css";
   var respTables = DIR+"responsive-tables/responsive-tables.css";
   var custom = "public/stylesheets/custom.css";
@@ -88,6 +88,7 @@ gulp.task('allcss', function() {
   return streamqueue({ objectMode: true },
              gulp.src(normalize),
              gulp.src(foundation),
+             gulp.src(fdtDatepicker),
              gulp.src(fontawesome),
              gulp.src(animatecss),
              gulp.src(respTables),
@@ -156,6 +157,7 @@ gulp.task('upToParse', shell.task(['parse deploy']));
 
 gulp.task('deploy', function (callback) {
   runSequence('imgmin',
+              'clean',
               'cleanbower',
               'upToParse',
               callback);
