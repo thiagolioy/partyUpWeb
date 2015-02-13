@@ -3,4 +3,7 @@ var actions = require('./actions');
 
 $(document).foundation();
 bindings.attachEvents();
-// actions.initGMaps();
+
+$(document).ready(function(){
+   actions.initGMaps();
+});

@@ -49,7 +49,8 @@ gulp.task('alljs', function() {
              gulp.src(respTables),
              gulp.src(parseSdk),
              gulp.src(moment),
-             gulp.src(customJs))
+             gulp.src(customJs),
+             gulp.src(gMaps))
              .pipe(concat("all.min.js"))
             // .pipe(uglify())
              .pipe(gulp.dest("./public/js/dist/"));

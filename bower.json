@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "fontawesome": "~4.3.0",
-    "animate.css": "~3.2.0"
+    "animate.css": "~3.2.0",
+    "gmaps.js": "~0.4.16"
   }
 }

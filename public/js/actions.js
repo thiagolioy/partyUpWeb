@@ -12,68 +12,25 @@ module.exports = {
   },
 
   initGMaps : function(){
-    // new GMaps({
-    //   div: '#map-canvas',
-    //   lat: 23.5500,
-    //   lng: 46.6333
-    // });
-  },
-
-  createCORSRequest : function(method, url) {
-    var xhr = new XMLHttpRequest();
-    if ("withCredentials" in xhr) {
-      xhr.open(method, url, true);
-    } else if (typeof XDomainRequest != "undefined") {
-      xhr = new XDomainRequest();
-      xhr.open(method, url);
-    } else {
-      xhr = null;
-    }
-    return xhr;
-  },
-
-  uploadFile : function(){
-
+    new GMaps({
+      div: '#map-canvas',
+      lat: -23.59580171504693,
+      lng: -46.679654453408084,
+      zoom: 5
+    });
   },
 
   searchInMaps : function(search){
     search = search.replace(/\s/g, "+");
-    // alert("search : " + search);
-    // var maps = new GMaps();
-    // alert("gMaps : " + maps);
-    // maps.geocode({
-    //   address: search,
-    //   callback: function(results, status) {
-    //     if (status == 'OK') {
-    //       var location = results[0].geometry.location;
-    //       uiutils.updateMaps(location.lat,location.lng);
-    //     }
-    //   }
-    // });
-
-    var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+search+"&key="+keys.mapsKey;
-    
-    var xhr = this.createCORSRequest('GET', url);
-    if (!xhr) {
-      alert('CORS not supported');
-      return;
-    }
-
-    // Response handlers.
-    xhr.onload = function() {
-      var text = xhr.responseText;
-      var obj = jQuery.parseJSON(text);
-      bestMapsResult = obj.results[0];
-      var location = bestMapsResult.geometry.location;
-      uiutils.updateMaps(location.lat,location.lng);
-    };
-
-    xhr.onerror = function() {
-      alert('Woops, there was an error making the request.');
-    };
-
-    xhr.send();
-
+    GMaps.geocode({
+      address: search,
+      callback: function(results, status) {
+        if (status == 'OK') {
+          var location = results[0].geometry.location;
+          uiutils.updateMaps(location.lat(),location.lng());
+        }
+      }
+    });
   },
   createPlace : function(imageFile){
 
