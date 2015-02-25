@@ -26,6 +26,7 @@ module.exports = {
       address: search,
       callback: function(results, status) {
         if (status == 'OK') {
+          bestMapsResult = results[0];
           var location = results[0].geometry.location;
           uiutils.updateMaps(location.lat(),location.lng());
         }
@@ -41,7 +42,7 @@ module.exports = {
     this.initParseSdk();
     var parseFile = new Parse.File(imageFile.name, imageFile);
     var location = bestMapsResult.geometry.location;
-    var point = new Parse.GeoPoint({latitude: location.lat, longitude: location.lng});
+    var point = new Parse.GeoPoint({latitude: location.lat(), longitude: location.lng()});
 
     var address = utils.addressFromMapsObj(bestMapsResult);
 
@@ -128,7 +129,6 @@ module.exports = {
 
     this.fetchPlace(partyObj.placeId,function(place){
 
-      var parseFile = new Parse.File(imageFile.name, imageFile);
       var Party = Parse.Object.extend("Party");
       var party = new Party();
 
@@ -136,7 +136,11 @@ module.exports = {
       moment().locale("br");
       var partyDate = moment(partyObj.date + " " + partyObj.hour, "DD/MM/YYYY HH:mm");
 
-      party.set("image", parseFile);
+      if(imageFile){
+        var parseFile = new Parse.File(imageFile.name, imageFile);
+        party.set("image", parseFile);
+      } 
+      
       party.set("name", partyObj.name);
       party.set("canonicalName", partyObj.name.toUpperCase());
       party.set("date", partyDate._d);

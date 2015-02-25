@@ -13,7 +13,7 @@ module.exports = {
   },
   bindSelectPlaceImageFileChangeEvent : function () {
     $('#select-file').bind("change", function(f) {
-      var file = uiutils.fetchFileFromInput('#select-file');
+      var file = uiutils.fetchFileFromInput('#select-file', true);
       if(file && utils.isValidImage(file)){
         $("#image-name").val(file.name);
       }else{
@@ -30,7 +30,7 @@ module.exports = {
 
   bindCreatePlaceEvent : function(){
     $('#create-place-btn').click(function() {
-      var file = uiutils.fetchFileFromInput('#select-file');
+      var file = uiutils.fetchFileFromInput('#select-file', true);
       if(file){
         actions.createPlace(file);
       }else{
@@ -41,7 +41,7 @@ module.exports = {
 
   bindCreatePartyEvent : function(){
     $('#create-party-btn').click(function() {
-      var file = uiutils.fetchFileFromInput('#select-file');
+      var file = uiutils.fetchFileFromInput('#select-file', false);
       actions.createParty(file);
     });
   },
