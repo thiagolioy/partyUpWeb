@@ -13,9 +13,14 @@ module.exports = {
     }
   },
 
-  fetchFileFromInput : function(input){
+  fetchFileFromInput : function(input,isNeeded){
     var fileUploadControl = $(input)[0];
-    var hasFiles = fileUploadControl.files.length > 0;
+    var hasFiles = true;
+
+    if(isNeeded){
+      hasFiles = fileUploadControl.files.length > 0;
+    }
+
     return hasFiles ? fileUploadControl.files[0] : null;
   },
 

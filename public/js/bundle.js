@@ -1623,7 +1623,7 @@ module.exports = {
   },
   bindSelectPlaceImageFileChangeEvent : function () {
     $('#select-file').bind("change", function(f) {
-      var file = uiutils.fetchFileFromInput('#select-file');
+      var file = uiutils.fetchFileFromInput('#select-file',false);
       if(file && utils.isValidImage(file)){
         $("#image-name").val(file.name);
       }else{
