@@ -24,6 +24,10 @@ app.get('/party', basicAuth, partiesCtrl.new);
 app.get('/places', basicAuth, placesCtrl.index);
 app.get('/place', basicAuth, placesCtrl.new);
 
+//Privacy Police
+app.get('/privacy', function(req, res) {
+  res.render('dist/privacy_police');
+})
 
 // Attach the Express app to Cloud Code.
 app.listen();
