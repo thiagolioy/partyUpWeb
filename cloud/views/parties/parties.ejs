@@ -21,6 +21,8 @@
               <td> <%= moment(party.get('date')).format('DD/MM/YYYY') %> </td>
               <% if(party.get('sendNamesType') == 'facebook')  {%>
                 <td><a target="_blank" href="https://www.facebook.com/events/<%=party.get('sendNamesTo')%>/?ref_dashboard_filter=upcoming">FacebookEvent</a></td>
+              <% }else if(party.get('sendNamesType') == 'none')  {%>
+                <td>Sem lista</td>
               <% }else {%>
                 <td><%=party.get('sendNamesTo')%></td>
               <% }%>
