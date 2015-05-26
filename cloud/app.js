@@ -19,7 +19,7 @@ app.use(express.bodyParser());    // Middleware for reading request body
 // path and HTTP verb using the Express routing API.
 app.post('/parties', basicAuth, partiesCtrl.create);
 app.get('/parties/:id', basicAuth, partiesCtrl.show);
-// app.delete('/parties/:id', basicAuth, partiesCtrl.delete);
+app.get('/parties/delete/:id', basicAuth, partiesCtrl.delete);
 app.get('/parties', basicAuth, partiesCtrl.index);
 app.get('/party', basicAuth, partiesCtrl.new);
 app.get('/places', basicAuth, placesCtrl.index);

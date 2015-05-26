@@ -88,7 +88,7 @@ exports.delete = function(req, res) {
 
       party.destroy({
         success: function(myObject) {
-          // The object was deleted from the Parse Cloud.
+          numberOfPartyPages(req,res,fetchParties);
         },
         error: function(myObject, error) {
           // The delete failed.
@@ -121,32 +121,31 @@ var numberOfPartyPages = function(req,res,callback){
 
 };
 
-exports.index = function(req, res) {
+var fetchParties = function(req,res,numberOfPages){
 
-  var fetchParties = function(req,res,numberOfPages){
-
-      var page = req.query.page || 0;
+    var page = req.query.page || 0;
 
 
-      console.log("params :" + req.query);
+    console.log("params :" + req.query);
 
-      var query = new Parse.Query(Party);
-      query.descending('createdAt');
-      query.limit(limit);
-      query.skip(page * limit);
-      query.include("place");
-      query.find().then(function(parties) {
-        renderWithLibs(res,'dist/parties/parties', {
-          parties: parties,
-          partiesCount: numberOfPages,
-          currentPage : page
-        });
-      },
-      function() {
-        res.send(500, 'Failed loading parties');
+    var query = new Parse.Query(Party);
+    query.descending('createdAt');
+    query.limit(limit);
+    query.skip(page * limit);
+    query.include("place");
+    query.find().then(function(parties) {
+      renderWithLibs(res,'dist/parties/parties', {
+        parties: parties,
+        partiesCount: numberOfPages,
+        currentPage : page
       });
-  };
+    },
+    function() {
+      res.send(500, 'Failed loading parties');
+    });
+};
 
+exports.index = function(req, res) {
 
   numberOfPartyPages(req,res,fetchParties);
 
