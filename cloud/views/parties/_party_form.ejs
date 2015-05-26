@@ -47,7 +47,7 @@
 							value="<%= party ? moment(party.get('date')).format('DD/MM/YYYY') : '' %>" data-date-format="dd/mm/yyyy">
 						</div>
 						<div class="large-4 medium-4 small-4 columns">
-							<input type="text" class="span2"  placeholder="Hora - hh:MM" id="hour">
+							<input type="text" class="span2"  placeholder="Hora - HH:mm" id="hour" value="<%= party ? moment(party.get('date')).format('HH:mm') : '' %>" data-date-format="HH:mm">
 						</div>
 					</div>
 				</div>
