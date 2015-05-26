@@ -34,7 +34,7 @@ exports.new = function(req, res) {
       var query = new Parse.Query(Place);
       query.descending('createdAt');
       query.find().then(function(places) {
-        res.render('dist/parties/party', {
+        renderWithLibs(res,'dist/parties/party', {
           party : null,
           places: places,
           cities: uniqueCitiesOn(places)
@@ -60,9 +60,10 @@ exports.show = function(req, res) {
       placesQuery.descending('createdAt');
       placesQuery.find().then(function(places) {
 
-        res.render('dist/parties/party', {
+        renderWithLibs(res,'dist/parties/party', {
           party: party,
-          places:places
+          places:places,
+          cities: uniqueCitiesOn(places)
         });
 
       },
@@ -79,6 +80,31 @@ exports.show = function(req, res) {
     }
   });
 };
+
+exports.delete = function(req, res) {
+  var query = new Parse.Query(Party);
+  query.get(req.params.id, {
+    success: function(party) {
+
+      party.destroy({
+        success: function(myObject) {
+          // The object was deleted from the Parse Cloud.
+        },
+        error: function(myObject, error) {
+          // The delete failed.
+          // error is a Parse.Error with an error code and message.
+        }
+      });
+
+
+    },
+    error: function(object, error) {
+      // The object was not retrieved successfully.
+      // error is a Parse.Error with an error code and message.
+    }
+  });
+};
+
 
 var numberOfPartyPages = function(req,res,callback){
   var query = new Parse.Query(Party);

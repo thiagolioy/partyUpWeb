@@ -121,49 +121,71 @@ module.exports = {
     });
   },
 
+  saveParty : function(partyObj,place,imageFile){
+
+    var Party = Parse.Object.extend("Party");
+    var party = new Party();
+
+    moment().utcOffset(-180);
+    moment().locale("br");
+    var partyDate = moment(partyObj.date + " " + partyObj.hour, "DD/MM/YYYY HH:mm");
+
+    if(imageFile){
+      var parseFile = new Parse.File(imageFile.name, imageFile);
+      party.set("image", parseFile);
+    }
+
+    if(partyObj.partyId)
+      party.set("id",partyObj.partyId);
+
+    party.set("name", partyObj.name);
+    party.set("canonicalName", partyObj.name.toUpperCase());
+    party.set("date", partyDate._d);
+    party.set("description", partyObj.description);
+    party.set("malePrice", partyObj.malePrice);
+    party.set("femalePrice", partyObj.femalePrice);
+    party.set("place", place);
+
+    party.set("sendNamesType", partyObj.partyListType);
+    party.set("sendNamesTo", partyObj.sendNamesTo);
+
+    party.save(null, {
+      success: function(party) {
+        window.location.href = "http://partyup.parseapp.com/parties";
+      },
+      error: function(party, error) {
+        alert('Failed to create new object, with error code: ' + error.message);
+      }
+    });
+
+  },
+
+  updateParty : function(imageFile){
+
+    this.initParseSdk();
+
+    var partyObj = utils.partyFromInputs();
+    partyObj["partyId"] = utils.partyIdFromInput();
+
+    var context = this;
+    this.fetchPlace(partyObj.placeId,function(place){
+
+      context.saveParty(partyObj,place,imageFile);
+
+    });
+
+  },
+
   createParty : function(imageFile){
 
     this.initParseSdk();
 
     var partyObj = utils.partyFromInputs();
 
+    var context = this;
     this.fetchPlace(partyObj.placeId,function(place){
 
-      var Party = Parse.Object.extend("Party");
-      var party = new Party();
-
-      moment().utcOffset(-180);
-      moment().locale("br");
-      var partyDate = moment(partyObj.date + " " + partyObj.hour, "DD/MM/YYYY HH:mm");
-
-      if(imageFile){
-        var parseFile = new Parse.File(imageFile.name, imageFile);
-        party.set("image", parseFile);
-      } 
-      
-      party.set("name", partyObj.name);
-      party.set("canonicalName", partyObj.name.toUpperCase());
-      party.set("date", partyDate._d);
-      party.set("description", partyObj.description);
-      party.set("malePrice", partyObj.malePrice);
-      party.set("femalePrice", partyObj.femalePrice);
-      party.set("place", place);
-      if(partyObj.facebookId){
-        party.set("sendNamesType", "facebook");
-        party.set("sendNamesTo", partyObj.facebookId);
-      }else{
-        party.set("sendNamesType", "mail");
-        party.set("sendNamesTo", partyObj.eventEmail);
-      }
-
-      party.save(null, {
-        success: function(party) {
-          window.location.href = "http://partyup.parseapp.com/parties";
-        },
-        error: function(party, error) {
-          alert('Failed to create new object, with error code: ' + error.message);
-        }
-      });
+      context.saveParty(partyObj,place,imageFile);
 
     });
 

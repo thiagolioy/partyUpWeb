@@ -141,13 +141,11 @@ gulp.task('watchjs', function(callback) {
   runSequence('lint',
               'jsmin',
               'alljs',
-              'clean',
               callback);
 });
 
 gulp.task('watchhtml', function(callback) {
   runSequence('htmlmin',
-              'clean',
               callback);
 });
 

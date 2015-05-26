@@ -33,16 +33,22 @@ module.exports = {
     return address;
   },
   partyFromInputs : function(){
-    var inputs = ["name","datepicker","hour","description","select-place",
-    "facebook-event-id","event-email","male-price","female-price"];
-    var keys = ["name","date","hour","description","placeId","facebookId",
-    "eventEmail","malePrice","femalePrice"];
+    var inputs = ["name","datepicker","hour","description","select-place","select-party-list-type",
+    "send-names-to-event-list-id","male-price","female-price"];
+    var keys = ["name","date","hour","description","placeId","partyListType","sendNamesTo","malePrice","femalePrice"];
     var party = {};
     $.each(inputs, function(i,v){
       party[keys[i]] = $("#"+v).val();
     });
 
     return party;
+  },
+
+  partyIdFromInput : function(){
+    return $("#party-to-update-id").val();
   }
+
+
+
 
 }

@@ -46,6 +46,13 @@ module.exports = {
     });
   },
 
+  bindUpdatePartyEvent : function(){
+    $('#update-party-btn').click(function() {
+      var file = uiutils.fetchFileFromInput('#select-file', false);
+      actions.updateParty(file);
+    });
+  },
+
   bindRequestFocusOnDatepicker : function(){
     $('#datepicker').focus(function(){
       $('#datepicker').fdatepicker('show');
@@ -56,12 +63,16 @@ module.exports = {
     $('#select-party-list-type').bind("change",function(f){
       var option = $('#select-party-list-type').val();
 
-      if(option == "facebook"){
-        $("#facebook-event-id").parent().removeClass("hide");
-        $("#event-email").parent().addClass("hide");
-      }else if(option == "email"){
-        $("#event-email").parent().removeClass("hide");
-        $("#facebook-event-id").parent().addClass("hide");
+      var placeholders = {"facebook":"Facebook Event Id",
+                      "whatsapp":"Whatsapp phone Number",
+                      "mail":"Partys list email"}
+
+      $("#send-names-to-event-list-id").val("");
+      if(option != "none"){
+        $("#send-names-to-event-list-id").parent().removeClass("hide");
+        $("#send-names-to-event-list-id").attr("placeholder", placeholders[option]);
+      }else{
+        $("#send-names-to-event-list-id").parent().addClass("hide");
       }
     });
   },

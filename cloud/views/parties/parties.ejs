@@ -12,6 +12,7 @@
         <th>Lugar</th>
         <th>Data</th>
         <th>Contato Lista</th>
+        <th>Remover</th>
       </tr>
         <% parties.forEach(function(party) { %>
             <tr>
@@ -23,6 +24,7 @@
               <% }else {%>
                 <td><%=party.get('sendNamesTo')%></td>
               <% }%>
+              <td><a rel="nofollow" data-method="delete"  href="http://partyup.parseapp.com/parties/<%=party.id%>">Remover</a></td>
             </tr>
         <% }) %>
 

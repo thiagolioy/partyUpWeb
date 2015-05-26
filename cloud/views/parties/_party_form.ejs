@@ -1,10 +1,19 @@
 <form>
 
+	<% if(party) { %>
+		<div class="row">
+			<div class="large-6 medium-6 small-12 columns hide">
+				<input id="party-to-update-id"  type="text" class="hide" value="<%=party.id%>"  />
+			</div>
+		</div>
+	<%}%>
+
+
 
 	<div class="row">
 			<div class="large-6 medium-6 small-12 columns">
 			<select id="select-city">
-				<option value="" disabled selected>Escolha a Cidade</option>
+				<option value="<%= party ? party.get('place').get('city') : '' %>"><%= party ? party.get('place').get('city') : 'Escolha a Cidade' %></option>
 				<% cities.forEach(function(city) { %>
 					<option value="<%=city%>"><%= city %></option>
 					<% }) %>
@@ -12,8 +21,17 @@
 			</div>
 
 			<div class="large-6 medium-6 small-12 columns">
+
+
 				<select id="select-place">
-					<option value="" disabled selected>Escolha o Lugar</option>
+					<option value="<%= party ? party.get('place').id : '' %>"><%= party ? party.get('place').get('name') : 'Escolha a Lugar' %></option>
+
+					<% if(party) { %>
+						<% places.forEach(function(place) { %>
+		          <option value='<%= place.id %>' ><%= place.get('name') %> </option>
+		        <% }) %>
+					<%}%>
+
 				</select>
 			</div>
 		</div>
@@ -26,7 +44,7 @@
 					<div class="row collapse">
     					<div class="large-8 medium-8 small-8 columns">
 							<input type="text" class="span2"  placeholder="Data - dd/mm/yyyy" id="datepicker"
-							value="<%= party ? party.get('date') : '' %>" data-date-format="dd/mm/yyyy">
+							value="<%= party ? moment(party.get('date')).format('DD/MM/YYYY') : '' %>" data-date-format="dd/mm/yyyy">
 						</div>
 						<div class="large-4 medium-4 small-4 columns">
 							<input type="text" class="span2"  placeholder="Hora - hh:MM" id="hour">
@@ -38,10 +56,12 @@
 			<div class="row">
 
 				<div class="large-6 medium-6 small-12 columns">
-					<input id="male-price" type="text" placeholder="Preço Masculino" />
+					<input id="male-price" type="text" placeholder="Preço Masculino"
+					 value="<%= party ? party.get('malePrice') : '' %>" />
 				</div>
 				<div class="large-6 medium-6 small-12 columns">
-					<input id="female-price" type="text" placeholder="Preço Feminino" />
+					<input id="female-price" type="text" placeholder="Preço Feminino"
+					value="<%= party ? party.get('femalePrice') : '' %>" />
 				</div>
 			</div>
 
@@ -50,22 +70,20 @@
 
 				<div class="large-6 medium-6 small-12 columns">
 					<select id="select-party-list-type">
-						<option value="" disabled selected>Tipo de Lista</option>
-						<option value="facebook">Facebook</option>
-						<option value="email">Email</option>
+						<option value="<%= party ? party.get('sendNamesType') : '' %>"><%= party ? party.get('sendNamesType') : 'Escolha o tipo de lista' %> </option>
+						<option value="facebook">facebook</option>
+						<option value="mail">mail</option>
+						<option value="whatsapp">whatsapp</option>
+						<option value="none">none</option>
 					</select>
 				</div>
 			</div>
 
 			<div class="row">
 
-				<div class="large-6 medium-6 small-12 columns hide">
-					<input id="facebook-event-id"  type="text" placeholder="Facebook Event ID" />
+				<div class="large-6 medium-6 small-12 columns">
+					<input id="send-names-to-event-list-id" value="<%= party ? party.get('sendNamesTo') : '' %>"  type="text" placeholder="Names to event list" />
 				</div>
-				<div class="large-6 medium-6 small-12 columns hide">
-					<input id="event-email" type="text" placeholder="Event email" />
-				</div>
-
 			</div>
 
 
@@ -73,13 +91,20 @@
 
 			<div class="row">
 				<div class="large-12 medium-12 small-12 columns">
-					<textarea rows="10" cols="50" id="description" placeholder="Descrição"></textarea>
+					<textarea rows="10" cols="50" id="description" placeholder="Descrição">
+						<%= party ? party.get('description') : '' %>
+					</textarea>
 				</div>
 			</div>
 
 			<div class="row">
 				<div class="large-12 medium-12 small-12 columns">
-					<a href="#" class="button postfix default" id="create-party-btn">Salvar</a>
+					<% if(party) { %>
+						<a href="#" class="button postfix default" id="update-party-btn">Atualizar</a>
+					<%} else {%>
+						<a href="#" class="button postfix default" id="create-party-btn">Salvar</a>
+					<%}%>
+
 				</div>
 			</div>
 
