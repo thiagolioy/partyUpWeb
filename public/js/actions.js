@@ -75,10 +75,12 @@ module.exports = {
 
     place.save(null, {
       success: function(place) {
+        uiutils.disablePlaceButtons(false);
         window.location.href = "http://partyup.parseapp.com/places";
       },
       error: function(place, error) {
         alert('Failed to create new object, with error code: ' + error.message);
+        uiutils.disablePlaceButtons(false);
       }
     });
 
@@ -97,9 +99,13 @@ module.exports = {
     query.get(placeId, {
       success: function(place) {
         successCallback(place);
+        uiutils.disablePartyButtons(false);
+        uiutils.disablePlaceButtons(false);
       },
       error: function(object, error) {
         alert('Failed to retrieve new object, with error code: ' + error.message);
+        uiutils.disablePartyButtons(false);
+        uiutils.disablePlaceButtons(false);
       }
     });
   },

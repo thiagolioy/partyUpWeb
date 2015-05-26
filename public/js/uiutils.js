@@ -30,6 +30,15 @@ module.exports = {
     $("#progressbar-meter").animate({width:status});
   },
 
+  disablePlaceButtons : function(should){
+    $("#create-place-btn").prop('disabled', should);
+  },
+
+  disablePartyButtons : function(should){
+    $("#update-party-btn").prop('disabled', should);
+    $("#create-party-btn").prop('disabled', should);
+  },
+
   updateMaps : function(lat,lng){
     var myLatlng = new google.maps.LatLng(lat,lng);
     var mapOptions = {

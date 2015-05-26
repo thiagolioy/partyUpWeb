@@ -32,6 +32,7 @@ module.exports = {
     $('#create-place-btn').click(function() {
       var file = uiutils.fetchFileFromInput('#select-file', true);
       if(file){
+        uiutils.disablePlaceButtons(true);
         actions.createPlace(file);
       }else{
         alert("Escolha a imagem primeiro!");
@@ -42,6 +43,7 @@ module.exports = {
   bindCreatePartyEvent : function(){
     $('#create-party-btn').click(function() {
       var file = uiutils.fetchFileFromInput('#select-file', false);
+      uiutils.disablePartyButtons(true);
       actions.createParty(file);
     });
   },
@@ -49,6 +51,7 @@ module.exports = {
   bindUpdatePartyEvent : function(){
     $('#update-party-btn').click(function() {
       var file = uiutils.fetchFileFromInput('#select-file', false);
+      uiutils.disablePartyButtons(true);
       actions.updateParty(file);
     });
   },
