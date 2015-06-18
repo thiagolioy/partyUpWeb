@@ -131,10 +131,7 @@ module.exports = {
 
     var Party = Parse.Object.extend("Party");
     var party = new Party();
-
-    moment().utcOffset(-180);
-    moment().locale("br");
-    var partyDate = moment(partyObj.date + " " + partyObj.hour, "DD/MM/YYYY HH:mm");
+    var partyDate = moment.utc(partyObj.date + " " + partyObj.hour, "DD/MM/YYYY HH:mm");
 
     if(imageFile){
       var parseFile = new Parse.File(imageFile.name, imageFile);

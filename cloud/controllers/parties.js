@@ -10,6 +10,7 @@ var limit = 10;
 
 
 var renderWithLibs = function(res,page,dict){
+  moment.locale('br');
   dict["moment"] = moment;
   res.render(page, dict);
 }
