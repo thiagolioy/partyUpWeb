@@ -30,5 +30,9 @@ app.get('/privacy', function(req, res) {
   res.render('dist/privacy_police');
 })
 
+app.get('/', function(req, res) {
+  res.render('dist/landing');
+})
+
 // Attach the Express app to Cloud Code.
 app.listen();
